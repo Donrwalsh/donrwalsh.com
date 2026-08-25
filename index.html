@@ -93,15 +93,6 @@ body{
 .card::before{left:16px;}
 .card::after{right:16px;}
 
-.card .tag{
-  font-family:'IBM Plex Mono',monospace;
-  font-size:10px;
-  letter-spacing:0.08em;
-  text-transform:uppercase;
-  color:var(--teal);
-  margin-bottom:8px;
-  display:inline-block;
-}
 .card h3{
   font-family:'Spectral',serif;
   font-size:17px;
@@ -169,41 +160,6 @@ body{
 <div class="side-note" id="side-note"></div>
 
 <script>
-// Presentation metadata only — the numbers, including release_date used
-// for sorting, all come from data/ff-progress.json, generated at build
-// time from the Steam Web API (achievements) and Steam Store API
-// (release_date, which the Web API doesn't carry).
-var GAME_META = {
-  "ff1":                     { tag: "Steam" },
-  "ff2":                     { tag: "Steam" },
-  "ff3":                     { tag: "Steam" },
-  "ff3-3d-remake":           { tag: "3D Remake" },
-  "ff4":                     { tag: "Steam" },
-  "ff4-3d-remake":           { tag: "3D Remake" },
-  "ff4-after-years":         { tag: "After Years" },
-  "ff5":                     { tag: "Steam" },
-  "ff6":                     { tag: "Steam" },
-  "ff7-2013":                { tag: "1998 Release" },
-  "ff7":                     { tag: "Steam" },
-  "ff7-crisis-core":         { tag: "Crisis Core" },
-  "ff7-remake":              { tag: "Remake" },
-  "ff7-rebirth":             { tag: "Rebirth" },
-  "ff8":                     { tag: "Steam" },
-  "ff8-remastered":          { tag: "Remastered" },
-  "ff9":                     { tag: "Steam" },
-  "ff10-10-2":               { tag: "HD Remaster" },
-  "ff12":                    { tag: "Zodiac Age" },
-  "ff13":                    { tag: "Steam" },
-  "ff13-2":                  { tag: "XIII-2" },
-  "ff13-lightning-returns":  { tag: "Lightning Returns" },
-  "ff15":                    { tag: "Steam" },
-  "ff16":                    { tag: "Steam" },
-  "fftactics":               { tag: "Steam" },
-  "fftype0-hd":              { tag: "HD" },
-  "world-of-ff":             { tag: "Steam" },
-  "stranger-of-paradise":    { tag: "Origin" }
-};
-
 function formatReleaseDate(dateStr) {
   if (!dateStr) return "Release date unknown";
   var d = new Date(dateStr + "T00:00:00Z");
@@ -229,16 +185,8 @@ function buildGauge(unlocked, total) {
 }
 
 function buildCard(game) {
-  var meta = GAME_META[game.key] || { tag: game.platform || "Steam" };
   var card = document.createElement("div");
   card.className = "card";
-
-  if (meta.tag && meta.tag !== "Steam") {
-    var tag = document.createElement("span");
-    tag.className = "tag";
-    tag.textContent = meta.tag;
-    card.appendChild(tag);
-  }
 
   var h3 = document.createElement("h3");
   h3.textContent = game.name || game.key;
