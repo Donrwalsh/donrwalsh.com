@@ -1,7 +1,384 @@
-<h1>Hello there</h1>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Final Fantasy Achievement Tracker</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Cinzel:wght@500;700&family=Spectral:ital,wght@0,400;0,600;1,400&family=IBM+Plex+Sans:wght@400;500&family=IBM+Plex+Mono:wght@500;600&display=swap');
 
-<h2>How are you doing?</h2>
+:root{
+  --bg:#12162b;
+  --panel:#1b2040;
+  --panel-hi:#232a52;
+  --border:#3a3f6b;
+  --gold:#b8933f;
+  --gold-bright:#d9b869;
+  --teal:#4fb8ac;
+  --text:#ece6d8;
+  --text-muted:#8e93b8;
+  --danger-empty:#2a2f52;
+}
 
-<h3>Quite well, yourself?</h3>
+*{box-sizing:border-box;}
+html,body{margin:0;padding:0;background:var(--bg);}
+body{
+  font-family:'IBM Plex Sans',sans-serif;
+  color:var(--text);
+  padding:56px 24px 100px;
+  background:
+    radial-gradient(ellipse at 20% -10%, rgba(184,147,63,0.08), transparent 45%),
+    radial-gradient(ellipse at 90% 10%, rgba(79,184,172,0.06), transparent 40%),
+    var(--bg);
+}
 
-<h2>I am great!</h2>
+.page-head{
+  max-width:1040px;
+  margin:0 auto 64px;
+  text-align:center;
+}
+.page-head .eyebrow{
+  font-family:'IBM Plex Mono',monospace;
+  font-size:12px;
+  letter-spacing:0.32em;
+  color:var(--teal);
+  text-transform:uppercase;
+  margin-bottom:14px;
+}
+.page-head h1{
+  font-family:'Cinzel',serif;
+  font-weight:700;
+  font-size:clamp(30px,4vw,46px);
+  margin:0 0 10px;
+  letter-spacing:0.02em;
+  color:var(--gold-bright);
+}
+.page-head p{
+  color:var(--text-muted);
+  font-size:15px;
+  max-width:520px;
+  margin:0 auto;
+  line-height:1.6;
+}
+.page-head .updated{
+  font-family:'IBM Plex Mono',monospace;
+  font-size:11px;
+  color:var(--text-muted);
+  margin-top:18px;
+}
+
+.era{
+  max-width:1040px;
+  margin:0 auto 58px;
+}
+
+.era-head{
+  display:flex;
+  align-items:baseline;
+  gap:22px;
+  margin-bottom:22px;
+  padding-bottom:14px;
+  border-bottom:1px solid var(--border);
+}
+.era-numeral{
+  font-family:'Cinzel',serif;
+  font-weight:700;
+  font-size:40px;
+  color:var(--gold-bright);
+  min-width:64px;
+}
+.era-titles{flex:1;}
+.era-titles h2{
+  font-family:'Spectral',serif;
+  font-weight:600;
+  font-size:20px;
+  margin:0 0 3px;
+  color:var(--text);
+}
+.era-titles .era-sub{
+  font-family:'IBM Plex Mono',monospace;
+  font-size:11.5px;
+  letter-spacing:0.06em;
+  color:var(--text-muted);
+  text-transform:uppercase;
+}
+.era-aggregate{
+  text-align:right;
+  font-family:'IBM Plex Mono',monospace;
+}
+.era-aggregate .frac{
+  font-size:18px;
+  font-weight:600;
+  color:var(--gold-bright);
+}
+.era-aggregate .pct{
+  font-size:11px;
+  color:var(--text-muted);
+  margin-top:2px;
+}
+
+.card-grid{
+  display:grid;
+  grid-template-columns:repeat(auto-fill,minmax(230px,1fr));
+  gap:16px;
+}
+
+.card{
+  position:relative;
+  background:linear-gradient(180deg,var(--panel-hi),var(--panel));
+  border:1px solid var(--border);
+  border-radius:3px;
+  padding:20px 18px 18px;
+}
+.card::before,.card::after{
+  content:"";
+  position:absolute;
+  width:9px;height:9px;
+  border:1px solid var(--gold);
+  transform:rotate(45deg);
+  top:-5px;
+}
+.card::before{left:16px;}
+.card::after{right:16px;}
+
+.card .tag{
+  font-family:'IBM Plex Mono',monospace;
+  font-size:10px;
+  letter-spacing:0.08em;
+  text-transform:uppercase;
+  color:var(--teal);
+  margin-bottom:8px;
+  display:inline-block;
+}
+.card h3{
+  font-family:'Spectral',serif;
+  font-size:17px;
+  font-weight:600;
+  margin:0 0 16px;
+  line-height:1.3;
+  min-height:44px;
+}
+
+.gauge{
+  display:flex;
+  gap:3px;
+  margin-bottom:10px;
+}
+.gauge .seg{
+  height:7px;
+  flex:1;
+  background:var(--danger-empty);
+  border-radius:1px;
+}
+.gauge .seg.filled{background:var(--teal);}
+.gauge .seg.filled.complete{background:var(--gold-bright);}
+
+.card-stats{
+  display:flex;
+  justify-content:space-between;
+  align-items:baseline;
+  font-family:'IBM Plex Mono',monospace;
+}
+.card-stats .frac{font-size:13px;color:var(--text-muted);}
+.card-stats .pct{font-size:15px;font-weight:600;color:var(--text);}
+.card-stats .pct.complete{color:var(--gold-bright);}
+
+.side-note{
+  max-width:1040px;
+  margin:70px auto 0;
+  padding-top:22px;
+  border-top:1px dashed var(--border);
+  font-family:'IBM Plex Mono',monospace;
+  font-size:11.5px;
+  color:var(--text-muted);
+  text-align:center;
+  line-height:1.8;
+}
+</style>
+</head>
+<body>
+
+<div class="page-head">
+  <div class="eyebrow">Save Data · Achievement Log</div>
+  <h1>The Crystal Chronicles</h1>
+  <p>Every mainline entry, remake, and side story — tracked one save file at a time.</p>
+  <div class="updated" id="updated"></div>
+</div>
+
+<div id="eras"></div>
+
+<div class="side-note" id="side-note"></div>
+
+<script>
+// Presentation metadata only — the numbers themselves all come from
+// data/ff-progress.json, generated at build time from the Steam API.
+var ERAS = [
+  { code: "I",    numeral: "I",    title: "Final Fantasy",            sub: "Origin · 1987" },
+  { code: "II",   numeral: "II",   title: "Final Fantasy II",         sub: "1988" },
+  { code: "III",  numeral: "III",  title: "Final Fantasy III",        sub: "NES Trilogy Close · 1990" },
+  { code: "IV",   numeral: "IV",   title: "Final Fantasy IV",         sub: "1991" },
+  { code: "V",    numeral: "V",    title: "Final Fantasy V",          sub: "1992" },
+  { code: "VI",   numeral: "VI",   title: "Final Fantasy VI",         sub: "1994" },
+  { code: "VII",  numeral: "VII",  title: "Final Fantasy VII",        sub: "Midgar & Beyond · 1997 – Present" },
+  { code: "VIII", numeral: "VIII", title: "Final Fantasy VIII",       sub: "1999" },
+  { code: "IX",   numeral: "IX",   title: "Final Fantasy IX",         sub: "2000" },
+  { code: "X",    numeral: "X",    title: "Final Fantasy X / X-2",    sub: "2001" },
+  { code: "XII",  numeral: "XII",  title: "Final Fantasy XII",        sub: "2006" },
+  { code: "XIII", numeral: "XIII", title: "Final Fantasy XIII",       sub: "2009" },
+  { code: "XV",   numeral: "XV",   title: "Final Fantasy XV",         sub: "2016" },
+  { code: "XVI",  numeral: "XVI",  title: "Final Fantasy XVI",        sub: "2023" },
+  { code: "§",    numeral: "§",    title: "Side Stories",             sub: "Tactics & Spin-offs" }
+];
+
+var GAME_META = {
+  "ff1":                     { era: "I",    tag: "Steam" },
+  "ff2":                     { era: "II",   tag: "Steam" },
+  "ff3":                     { era: "III",  tag: "Steam" },
+  "ff3-3d-remake":           { era: "III",  tag: "3D Remake" },
+  "ff4":                     { era: "IV",   tag: "Steam" },
+  "ff4-3d-remake":           { era: "IV",   tag: "3D Remake" },
+  "ff4-after-years":         { era: "IV",   tag: "After Years" },
+  "ff5":                     { era: "V",    tag: "Steam" },
+  "ff6":                     { era: "VI",   tag: "Steam" },
+  "ff7-2013":                { era: "VII",  tag: "1998 Release" },
+  "ff7":                     { era: "VII",  tag: "Steam" },
+  "ff7-crisis-core":         { era: "VII",  tag: "Crisis Core" },
+  "ff7-remake":              { era: "VII",  tag: "Remake" },
+  "ff7-rebirth":             { era: "VII",  tag: "Rebirth" },
+  "ff8":                     { era: "VIII", tag: "Steam" },
+  "ff8-remastered":          { era: "VIII", tag: "Remastered" },
+  "ff9":                     { era: "IX",   tag: "Steam" },
+  "ff10-10-2":               { era: "X",    tag: "HD Remaster" },
+  "ff12":                    { era: "XII",  tag: "Zodiac Age" },
+  "ff13":                    { era: "XIII", tag: "Steam" },
+  "ff13-2":                  { era: "XIII", tag: "XIII-2" },
+  "ff13-lightning-returns":  { era: "XIII", tag: "Lightning Returns" },
+  "ff15":                    { era: "XV",   tag: "Steam" },
+  "ff16":                    { era: "XVI",  tag: "Steam" },
+  "fftactics":               { era: "§",    tag: "Steam" },
+  "fftype0-hd":              { era: "§",    tag: "HD" },
+  "world-of-ff":             { era: "§",    tag: "Steam" },
+  "stranger-of-paradise":    { era: "§",    tag: "Origin" }
+};
+
+function segCount(unlocked, total) {
+  if (total <= 0) return 0;
+  return Math.round((unlocked / total) * 12);
+}
+
+function buildGauge(unlocked, total) {
+  var filled = segCount(unlocked, total);
+  var complete = total > 0 && unlocked === total;
+  var gauge = document.createElement("div");
+  gauge.className = "gauge";
+  for (var i = 0; i < 12; i++) {
+    var seg = document.createElement("div");
+    seg.className = "seg" + (i < filled ? " filled" + (complete ? " complete" : "") : "");
+    gauge.appendChild(seg);
+  }
+  return gauge;
+}
+
+function buildCard(game) {
+  var meta = GAME_META[game.key] || { tag: game.platform || "Steam" };
+  var card = document.createElement("div");
+  card.className = "card";
+
+  var tag = document.createElement("span");
+  tag.className = "tag";
+  tag.textContent = meta.tag;
+  card.appendChild(tag);
+
+  var h3 = document.createElement("h3");
+  h3.textContent = game.name || game.key;
+  card.appendChild(h3);
+
+  card.appendChild(buildGauge(game.unlocked, game.total));
+
+  var stats = document.createElement("div");
+  stats.className = "card-stats";
+  var frac = document.createElement("span");
+  frac.className = "frac";
+  frac.textContent = game.unlocked + " / " + game.total;
+  var pct = document.createElement("span");
+  pct.className = "pct" + (game.total > 0 && game.unlocked === game.total ? " complete" : "");
+  pct.textContent = game.percent + "%";
+  stats.appendChild(frac);
+  stats.appendChild(pct);
+  card.appendChild(stats);
+
+  return card;
+}
+
+function buildEraSection(eraDef, games) {
+  var totalUnlocked = games.reduce(function (sum, g) { return sum + g.unlocked; }, 0);
+  var totalAll = games.reduce(function (sum, g) { return sum + g.total; }, 0);
+  var pct = totalAll > 0 ? Math.floor((totalUnlocked * 100) / totalAll) : 0;
+
+  var section = document.createElement("div");
+  section.className = "era";
+
+  var head = document.createElement("div");
+  head.className = "era-head";
+  head.innerHTML =
+    '<div class="era-numeral">' + eraDef.numeral + '</div>' +
+    '<div class="era-titles">' +
+      '<h2>' + eraDef.title + '</h2>' +
+      '<div class="era-sub">' + eraDef.sub + '</div>' +
+    '</div>' +
+    '<div class="era-aggregate">' +
+      '<div class="frac">' + totalUnlocked + '/' + totalAll + '</div>' +
+      '<div class="pct">' + pct + '% complete</div>' +
+    '</div>';
+  section.appendChild(head);
+
+  var grid = document.createElement("div");
+  grid.className = "card-grid";
+  games.forEach(function (game) { grid.appendChild(buildCard(game)); });
+  section.appendChild(grid);
+
+  return section;
+}
+
+function render(data) {
+  var byEra = {};
+  data.games.forEach(function (game) {
+    var meta = GAME_META[game.key];
+    var eraCode = meta ? meta.era : "§";
+    (byEra[eraCode] = byEra[eraCode] || []).push(game);
+  });
+
+  var container = document.getElementById("eras");
+  ERAS.forEach(function (eraDef) {
+    var games = byEra[eraDef.code];
+    if (games && games.length) {
+      container.appendChild(buildEraSection(eraDef, games));
+    }
+  });
+
+  var updated = document.getElementById("updated");
+  if (data.generated_at) {
+    updated.textContent = "Last synced " + new Date(data.generated_at).toLocaleString();
+  }
+
+  document.getElementById("side-note").textContent =
+    "Data pulled from the Steam API for the account's full Final Fantasy library, refreshed on each rebuild.";
+}
+
+function renderError() {
+  var container = document.getElementById("eras");
+  container.innerHTML = '<p style="text-align:center;color:var(--text-muted);font-family:\'IBM Plex Mono\',monospace;">' +
+    'Could not load save data — try again shortly.</p>';
+}
+
+fetch("data/ff-progress.json")
+  .then(function (res) {
+    if (!res.ok) throw new Error("bad response");
+    return res.json();
+  })
+  .then(render)
+  .catch(renderError);
+</script>
+
+</body>
+</html>
