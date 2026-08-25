@@ -233,10 +233,12 @@ function buildCard(game) {
   var card = document.createElement("div");
   card.className = "card";
 
-  var tag = document.createElement("span");
-  tag.className = "tag";
-  tag.textContent = meta.tag;
-  card.appendChild(tag);
+  if (meta.tag && meta.tag !== "Steam") {
+    var tag = document.createElement("span");
+    tag.className = "tag";
+    tag.textContent = meta.tag;
+    card.appendChild(tag);
+  }
 
   var h3 = document.createElement("h3");
   h3.textContent = game.name || game.key;
