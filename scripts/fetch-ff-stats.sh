@@ -16,8 +16,8 @@ games="[]"
 while IFS= read -r entry; do
   key=$(jq -r '.key' <<< "$entry")
   appid=$(jq -r '.app_id' <<< "$entry")
-  date_override=$(jq -r '.release_date_override // ""' <<< "$entry")
-  name_override=$(jq -r '.name_override // ""' <<< "$entry")
+  manifest_release_date=$(jq -r '.release_date // ""' <<< "$entry")
+  manifest_name=$(jq -r '.name // ""' <<< "$entry")
   note=$(jq -r '.note // ""' <<< "$entry")
 
   player=$(curl -sf "https://api.steampowered.com/ISteamUserStats/GetUserStatsForGame/v0002/?appid=${appid}&key=${STEAM_API_KEY}&steamid=${STEAM_ID}" || echo '{}')
@@ -36,17 +36,17 @@ while IFS= read -r entry; do
     --argjson store "$store" \
     --arg key "$key" \
     --argjson appid "$appid" \
-    --arg date_override "$date_override" \
-    --arg name_override "$name_override" \
+    --arg manifest_release_date "$manifest_release_date" \
+    --arg manifest_name "$manifest_name" \
     --arg note "$note" \
     '
     ($schema.game.availableGameStats.achievements // []) as $sch
     | ($player.playerstats.achievements // [] | map(select(.name != null) | {(.name): .achieved}) | add // {}) as $plmap
-    | (if $name_override != "" then $name_override
+    | (if $manifest_name != "" then $manifest_name
        else ($store[$appid | tostring].data.name // $schema.game.gameName // $key)
        end) as $gname
     | ($store[$appid | tostring].data.release_date.date // "") as $raw_date
-    | (if $date_override != "" then $date_override
+    | (if $manifest_release_date != "" then $manifest_release_date
        else (try ($raw_date | strptime("%b %d, %Y") | mktime | strftime("%Y-%m-%d")) catch null)
        end) as $release_date
     | {

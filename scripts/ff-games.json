@@ -2,76 +2,185 @@
   {
     "key": "ff1",
     "app_id": 1173770,
-    "release_date_override": "1987-12-18",
+    "release_date": "1987-12-18",
+    "name": "Final Fantasy",
     "note": "(Pixel Remaster)"
   },
   {
     "key": "ff2",
     "app_id": 1173780,
-    "release_date_override": "1988-12-17",
+    "release_date": "1988-12-17",
+    "name": "Final Fantasy II",
     "note": "(Pixel Remaster)"
   },
   {
     "key": "ff3",
     "app_id": 1173790,
-    "release_date_override": "1990-04-27",
+    "release_date": "1990-04-27",
+    "name": "Final Fantasy III",
     "note": "(Pixel Remaster)"
   },
   {
     "key": "ff3-3d-remake",
     "app_id": 239120,
-    "release_date_override": "2006-08-24"
+    "release_date": "2006-08-24",
+    "name": "Final Fantasy III",
+    "note": "3D Remake"
   },
   {
     "key": "ff4",
     "app_id": 1173800,
-    "release_date_override": "1991-07-19",
+    "release_date": "1991-07-19",
+    "name": "Final Fantasy IV",
     "note": "(Pixel Remaster)"
   },
   {
     "key": "ff4-3d-remake",
     "app_id": 312750,
-    "release_date_override": "2007-12-30"
+    "release_date": "2007-12-30",
+    "name": "Final Fantasy IV",
+    "note": "3D Remake"
   },
   {
     "key": "ff4-after-years",
     "app_id": 346830,
-    "release_date_override": "2008-02-18"
+    "release_date": "2008-02-18",
+    "name": "Final Fantasy IV: The After Years"
   },
   {
     "key": "ff5",
     "app_id": 1173810,
-    "release_date_override": "1992-12-06",
+    "release_date": "1992-12-06",
+    "name": "Final Fantasy V",
     "note": "(Pixel Remaster)"
   },
   {
     "key": "ff6",
     "app_id": 1173820,
-    "release_date_override": "1994-04-02",
+    "release_date": "1994-04-02",
+    "name": "Final Fantasy VI",
     "note": "(Pixel Remaster)"
   },
   {
     "key": "ff7-2013",
     "app_id": 39140,
-    "release_date_override": "1997-01-31",
+    "release_date": "1997-01-31",
+    "name": "Final Fantasy VII",
     "note": "(2013)"
   },
-  { "key": "ff7", "app_id": 3837340, "release_date_override": "1997-01-31" },
-  { "key": "ff7-crisis-core", "app_id": 1608070 },
-  { "key": "ff7-remake", "app_id": 1462040 },
-  { "key": "ff7-rebirth", "app_id": 2909400 },
-  { "key": "ff8", "app_id": 39150 },
-  { "key": "ff8-remastered", "app_id": 1026680 },
-  { "key": "ff9", "app_id": 377840 },
-  { "key": "ff10-10-2", "app_id": 359870 },
-  { "key": "ff12", "app_id": 595520 },
-  { "key": "ff13", "app_id": 292120 },
-  { "key": "ff13-2", "app_id": 292140 },
-  { "key": "ff13-lightning-returns", "app_id": 345350 },
-  { "key": "ff15", "app_id": 637650 },
-  { "key": "ff16", "app_id": 2515020 },
-  { "key": "fftactics", "app_id": 1004640 },
-  { "key": "fftype0-hd", "app_id": 340170 },
-  { "key": "world-of-ff", "app_id": 552700 },
-  { "key": "stranger-of-paradise", "app_id": 1358700 }
+  {
+    "key": "ff7",
+    "app_id": 3837340,
+    "release_date": "1997-01-31",
+    "name": "Final Fantasy VII"
+  },
+  {
+    "key": "ff7-crisis-core",
+    "app_id": 1608070,
+    "name": "Crisis Core: Final Fantasy VII",
+    "release_date": "2007-08-13",
+    "note": "Reunion"
+  },
+  {
+    "key": "ff7-remake",
+    "app_id": 1462040,
+    "name": "Final Fantasy VII Remake",
+    "release_date": "2020-04-10",
+    "note": "Intergrade"
+  },
+  {
+    "key": "ff7-rebirth",
+    "app_id": 2909400,
+    "release_date": "2024-02-29",
+    "name": "Final Fantasy VII Rebirth"
+  },
+  {
+    "key": "ff8",
+    "app_id": 39150,
+    "name": "Final Fantasy VIII",
+    "release_date": "1999-02-11"
+  },
+  {
+    "key": "ff8-remastered",
+    "app_id": 1026680,
+    "name": "Final Fantasy VIII",
+    "release_date": "1999-02-11",
+    "note": "Remastered"
+  },
+  {
+    "key": "ff9",
+    "app_id": 377840,
+    "name": "Final Fantasy IX",
+    "release_date": "2000-07-07"
+  },
+  {
+    "key": "ff10-10-2",
+    "app_id": 359870,
+    "name": "Final Fantasy X/X-2",
+    "note": "HD Remaster",
+    "release_date": "2001-07-19"
+  },
+  {
+    "key": "ff12",
+    "app_id": 595520,
+    "name": "Final Fantasy XII",
+    "release_date": "2006-03-16",
+    "note": "The Zodiac Age"
+  },
+  {
+    "key": "ff13",
+    "app_id": 292120,
+    "name": "Final Fantasy XIII",
+    "release_date": "2009-12-17"
+  },
+  {
+    "key": "ff13-2",
+    "app_id": 292140,
+    "name": "Final Fantasy XIII-2",
+    "release_date": "2011-12-15"
+  },
+  {
+    "key": "ff13-lightning-returns",
+    "app_id": 345350,
+    "name": "Lightning Returns: Final Fantasy XIII",
+    "release_date": "2013-11-21"
+  },
+  {
+    "key": "ff15",
+    "app_id": 637650,
+    "name": "Final Fantasy XV",
+    "note": "Windows Edition",
+    "release_date": "2016-11-29"
+  },
+  {
+    "key": "ff16",
+    "app_id": 2515020,
+    "release_date": "2023-06-22",
+    "name": "Final Fantasy XVI"
+  },
+  {
+    "key": "fftactics",
+    "app_id": 1004640,
+    "release_date": "1997-06-20",
+    "name": "Final Fantasy Tactics",
+    "note": "The Ivalice Chronicles"
+  },
+  {
+    "key": "fftype0-hd",
+    "app_id": 340170,
+    "name": "Final Fantasy Type-0 HD",
+    "release_date": "2015-03-17"
+  },
+  {
+    "key": "world-of-ff",
+    "app_id": 552700,
+    "name": "World of Final Fantasy",
+    "release_date": "2016-10-17"
+  },
+  {
+    "key": "stranger-of-paradise",
+    "app_id": 1358700,
+    "release_date": "2022-03-18",
+    "name": "Stranger of Paradise: Final Fantasy Origin"
+  }
 ]
