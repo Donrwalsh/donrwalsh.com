@@ -36,7 +36,7 @@ while IFS= read -r entry; do
     '
     ($schema.game.availableGameStats.achievements // []) as $sch
     | ($player.playerstats.achievements // [] | map(select(.name != null) | {(.name): .achieved}) | add // {}) as $plmap
-    | ($schema.game.gameName // $key) as $gname
+    | ($store[$appid | tostring].data.name // $schema.game.gameName // $key) as $gname
     | ($store[$appid | tostring].data.release_date.date // "") as $raw_date
     | (try ($raw_date | strptime("%b %d, %Y") | mktime | strftime("%Y-%m-%d")) catch null) as $release_date
     | {
