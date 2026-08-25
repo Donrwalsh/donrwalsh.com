@@ -4,8 +4,14 @@ RUN apk add --no-cache bash curl jq
 WORKDIR /build
 COPY scripts/fetch-ff-stats.sh scripts/ff-games.json ./
 ARG STEAM_ID=76561198054967504
-RUN --mount=type=secret,id=steam_api_key \
-    STEAM_API_KEY="$(cat /run/secrets/steam_api_key)" \
+# Plain build ARG rather than a BuildKit --secret mount: Coolify's build
+# doesn't supply the latter (confirmed — the RUN below failed with
+# "/run/secrets/steam_api_key: No such file or directory" when it did).
+# This stage is discarded after the build (see stage 2's COPY --from),
+# so the key never reaches the shipped image's layers or `docker
+# history` — only this intermediate stage's own layer cache carries it.
+ARG STEAM_API_KEY
+RUN STEAM_API_KEY="${STEAM_API_KEY}" \
     STEAM_ID="${STEAM_ID}" \
     bash fetch-ff-stats.sh ff-games.json > ff-progress.json
 
