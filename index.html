@@ -88,6 +88,8 @@
         border: 1px solid var(--border);
         border-radius: 3px;
         padding: 20px 18px 18px;
+        display: flex;
+        flex-direction: column;
       }
       .card::before,
       .card::after {
@@ -104,6 +106,13 @@
       }
       .card::after {
         right: 16px;
+      }
+      .card.over-half::before {
+        background: var(--gold);
+      }
+      .card.complete::after {
+        background: var(--gold-bright);
+        border-color: var(--gold-bright);
       }
 
       .card h3 {
@@ -126,6 +135,10 @@
         letter-spacing: 0.04em;
         color: var(--text-muted);
         margin-bottom: 14px;
+      }
+
+      .card-bottom {
+        margin-top: auto;
       }
 
       .gauge {
@@ -230,6 +243,12 @@
       function buildCard(game) {
         var card = document.createElement("div");
         card.className = "card";
+        if (game.total > 0 && game.unlocked / game.total > 0.5) {
+          card.classList.add("over-half");
+        }
+        if (game.total > 0 && game.unlocked === game.total) {
+          card.classList.add("complete");
+        }
 
         var h3 = document.createElement("h3");
         h3.textContent = game.name || game.key;
@@ -247,7 +266,9 @@
         released.textContent = formatReleaseDate(game.release_date);
         card.appendChild(released);
 
-        card.appendChild(buildGauge(game.unlocked, game.total));
+        var bottom = document.createElement("div");
+        bottom.className = "card-bottom";
+        bottom.appendChild(buildGauge(game.unlocked, game.total));
 
         var stats = document.createElement("div");
         stats.className = "card-stats";
@@ -261,7 +282,8 @@
         pct.textContent = game.percent + "%";
         stats.appendChild(frac);
         stats.appendChild(pct);
-        card.appendChild(stats);
+        bottom.appendChild(stats);
+        card.appendChild(bottom);
 
         return card;
       }
