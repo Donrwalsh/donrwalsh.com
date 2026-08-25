@@ -20,20 +20,31 @@ while IFS= read -r entry; do
   player=$(curl -sf "https://api.steampowered.com/ISteamUserStats/GetUserStatsForGame/v0002/?appid=${appid}&key=${STEAM_API_KEY}&steamid=${STEAM_ID}" || echo '{}')
   schema=$(curl -sf "https://api.steampowered.com/ISteamUserStats/GetSchemaForGame/v2/?key=${STEAM_API_KEY}&appid=${appid}" || echo '{}')
 
+  # The Steam Web API (above) carries no release date. The public Steam
+  # Store API does, so pull it from there for sorting purposes. Sleep a
+  # touch between calls — this endpoint throttles more aggressively than
+  # the Web API and isn't meant for tight loops.
+  store=$(curl -sf "https://store.steampowered.com/api/appdetails?appids=${appid}&cc=us&l=en" || echo '{}')
+  sleep 1
+
   game_json=$(jq -c \
     --argjson player "$player" \
     --argjson schema "$schema" \
+    --argjson store "$store" \
     --arg key "$key" \
     --argjson appid "$appid" \
     '
     ($schema.game.availableGameStats.achievements // []) as $sch
     | ($player.playerstats.achievements // [] | map({(.apiname): .achieved}) | add // {}) as $plmap
     | ($schema.game.gameName // $key) as $gname
+    | ($store[$appid | tostring].data.release_date.date // "") as $raw_date
+    | (try ($raw_date | strptime("%b %d, %Y") | mktime | strftime("%Y-%m-%d")) catch null) as $release_date
     | {
         key: $key,
         app_id: $appid,
         name: $gname,
         platform: "Steam",
+        release_date: $release_date,
         achievements: [
           $sch[] | { id: .name, name: (.displayName // .name), unlocked: (($plmap[.name] // 0) == 1) }
         ]

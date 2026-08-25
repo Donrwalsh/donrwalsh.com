@@ -67,57 +67,9 @@ body{
   margin-top:18px;
 }
 
-.era{
-  max-width:1040px;
-  margin:0 auto 58px;
-}
-
-.era-head{
-  display:flex;
-  align-items:baseline;
-  gap:22px;
-  margin-bottom:22px;
-  padding-bottom:14px;
-  border-bottom:1px solid var(--border);
-}
-.era-numeral{
-  font-family:'Cinzel',serif;
-  font-weight:700;
-  font-size:40px;
-  color:var(--gold-bright);
-  min-width:64px;
-}
-.era-titles{flex:1;}
-.era-titles h2{
-  font-family:'Spectral',serif;
-  font-weight:600;
-  font-size:20px;
-  margin:0 0 3px;
-  color:var(--text);
-}
-.era-titles .era-sub{
-  font-family:'IBM Plex Mono',monospace;
-  font-size:11.5px;
-  letter-spacing:0.06em;
-  color:var(--text-muted);
-  text-transform:uppercase;
-}
-.era-aggregate{
-  text-align:right;
-  font-family:'IBM Plex Mono',monospace;
-}
-.era-aggregate .frac{
-  font-size:18px;
-  font-weight:600;
-  color:var(--gold-bright);
-}
-.era-aggregate .pct{
-  font-size:11px;
-  color:var(--text-muted);
-  margin-top:2px;
-}
-
 .card-grid{
+  max-width:1040px;
+  margin:0 auto;
   display:grid;
   grid-template-columns:repeat(auto-fill,minmax(230px,1fr));
   gap:16px;
@@ -154,9 +106,16 @@ body{
   font-family:'Spectral',serif;
   font-size:17px;
   font-weight:600;
-  margin:0 0 16px;
+  margin:0 0 6px;
   line-height:1.3;
   min-height:44px;
+}
+.card .released{
+  font-family:'IBM Plex Mono',monospace;
+  font-size:11px;
+  letter-spacing:0.04em;
+  color:var(--text-muted);
+  margin-bottom:14px;
 }
 
 .gauge{
@@ -205,61 +164,51 @@ body{
   <div class="updated" id="updated"></div>
 </div>
 
-<div id="eras"></div>
+<div class="card-grid" id="games"></div>
 
 <div class="side-note" id="side-note"></div>
 
 <script>
-// Presentation metadata only — the numbers themselves all come from
-// data/ff-progress.json, generated at build time from the Steam API.
-var ERAS = [
-  { code: "I",    numeral: "I",    title: "Final Fantasy",            sub: "Origin · 1987" },
-  { code: "II",   numeral: "II",   title: "Final Fantasy II",         sub: "1988" },
-  { code: "III",  numeral: "III",  title: "Final Fantasy III",        sub: "NES Trilogy Close · 1990" },
-  { code: "IV",   numeral: "IV",   title: "Final Fantasy IV",         sub: "1991" },
-  { code: "V",    numeral: "V",    title: "Final Fantasy V",          sub: "1992" },
-  { code: "VI",   numeral: "VI",   title: "Final Fantasy VI",         sub: "1994" },
-  { code: "VII",  numeral: "VII",  title: "Final Fantasy VII",        sub: "Midgar & Beyond · 1997 – Present" },
-  { code: "VIII", numeral: "VIII", title: "Final Fantasy VIII",       sub: "1999" },
-  { code: "IX",   numeral: "IX",   title: "Final Fantasy IX",         sub: "2000" },
-  { code: "X",    numeral: "X",    title: "Final Fantasy X / X-2",    sub: "2001" },
-  { code: "XII",  numeral: "XII",  title: "Final Fantasy XII",        sub: "2006" },
-  { code: "XIII", numeral: "XIII", title: "Final Fantasy XIII",       sub: "2009" },
-  { code: "XV",   numeral: "XV",   title: "Final Fantasy XV",         sub: "2016" },
-  { code: "XVI",  numeral: "XVI",  title: "Final Fantasy XVI",        sub: "2023" },
-  { code: "§",    numeral: "§",    title: "Side Stories",             sub: "Tactics & Spin-offs" }
-];
-
+// Presentation metadata only — the numbers, including release_date used
+// for sorting, all come from data/ff-progress.json, generated at build
+// time from the Steam Web API (achievements) and Steam Store API
+// (release_date, which the Web API doesn't carry).
 var GAME_META = {
-  "ff1":                     { era: "I",    tag: "Steam" },
-  "ff2":                     { era: "II",   tag: "Steam" },
-  "ff3":                     { era: "III",  tag: "Steam" },
-  "ff3-3d-remake":           { era: "III",  tag: "3D Remake" },
-  "ff4":                     { era: "IV",   tag: "Steam" },
-  "ff4-3d-remake":           { era: "IV",   tag: "3D Remake" },
-  "ff4-after-years":         { era: "IV",   tag: "After Years" },
-  "ff5":                     { era: "V",    tag: "Steam" },
-  "ff6":                     { era: "VI",   tag: "Steam" },
-  "ff7-2013":                { era: "VII",  tag: "1998 Release" },
-  "ff7":                     { era: "VII",  tag: "Steam" },
-  "ff7-crisis-core":         { era: "VII",  tag: "Crisis Core" },
-  "ff7-remake":              { era: "VII",  tag: "Remake" },
-  "ff7-rebirth":             { era: "VII",  tag: "Rebirth" },
-  "ff8":                     { era: "VIII", tag: "Steam" },
-  "ff8-remastered":          { era: "VIII", tag: "Remastered" },
-  "ff9":                     { era: "IX",   tag: "Steam" },
-  "ff10-10-2":               { era: "X",    tag: "HD Remaster" },
-  "ff12":                    { era: "XII",  tag: "Zodiac Age" },
-  "ff13":                    { era: "XIII", tag: "Steam" },
-  "ff13-2":                  { era: "XIII", tag: "XIII-2" },
-  "ff13-lightning-returns":  { era: "XIII", tag: "Lightning Returns" },
-  "ff15":                    { era: "XV",   tag: "Steam" },
-  "ff16":                    { era: "XVI",  tag: "Steam" },
-  "fftactics":               { era: "§",    tag: "Steam" },
-  "fftype0-hd":              { era: "§",    tag: "HD" },
-  "world-of-ff":             { era: "§",    tag: "Steam" },
-  "stranger-of-paradise":    { era: "§",    tag: "Origin" }
+  "ff1":                     { tag: "Steam" },
+  "ff2":                     { tag: "Steam" },
+  "ff3":                     { tag: "Steam" },
+  "ff3-3d-remake":           { tag: "3D Remake" },
+  "ff4":                     { tag: "Steam" },
+  "ff4-3d-remake":           { tag: "3D Remake" },
+  "ff4-after-years":         { tag: "After Years" },
+  "ff5":                     { tag: "Steam" },
+  "ff6":                     { tag: "Steam" },
+  "ff7-2013":                { tag: "1998 Release" },
+  "ff7":                     { tag: "Steam" },
+  "ff7-crisis-core":         { tag: "Crisis Core" },
+  "ff7-remake":              { tag: "Remake" },
+  "ff7-rebirth":             { tag: "Rebirth" },
+  "ff8":                     { tag: "Steam" },
+  "ff8-remastered":          { tag: "Remastered" },
+  "ff9":                     { tag: "Steam" },
+  "ff10-10-2":               { tag: "HD Remaster" },
+  "ff12":                    { tag: "Zodiac Age" },
+  "ff13":                    { tag: "Steam" },
+  "ff13-2":                  { tag: "XIII-2" },
+  "ff13-lightning-returns":  { tag: "Lightning Returns" },
+  "ff15":                    { tag: "Steam" },
+  "ff16":                    { tag: "Steam" },
+  "fftactics":               { tag: "Steam" },
+  "fftype0-hd":              { tag: "HD" },
+  "world-of-ff":             { tag: "Steam" },
+  "stranger-of-paradise":    { tag: "Origin" }
 };
+
+function formatReleaseDate(dateStr) {
+  if (!dateStr) return "Release date unknown";
+  var d = new Date(dateStr + "T00:00:00Z");
+  return "Released " + d.toLocaleDateString(undefined, { year: "numeric", month: "short", day: "numeric", timeZone: "UTC" });
+}
 
 function segCount(unlocked, total) {
   if (total <= 0) return 0;
@@ -293,6 +242,11 @@ function buildCard(game) {
   h3.textContent = game.name || game.key;
   card.appendChild(h3);
 
+  var released = document.createElement("div");
+  released.className = "released";
+  released.textContent = formatReleaseDate(game.release_date);
+  card.appendChild(released);
+
   card.appendChild(buildGauge(game.unlocked, game.total));
 
   var stats = document.createElement("div");
@@ -310,51 +264,18 @@ function buildCard(game) {
   return card;
 }
 
-function buildEraSection(eraDef, games) {
-  var totalUnlocked = games.reduce(function (sum, g) { return sum + g.unlocked; }, 0);
-  var totalAll = games.reduce(function (sum, g) { return sum + g.total; }, 0);
-  var pct = totalAll > 0 ? Math.floor((totalUnlocked * 100) / totalAll) : 0;
-
-  var section = document.createElement("div");
-  section.className = "era";
-
-  var head = document.createElement("div");
-  head.className = "era-head";
-  head.innerHTML =
-    '<div class="era-numeral">' + eraDef.numeral + '</div>' +
-    '<div class="era-titles">' +
-      '<h2>' + eraDef.title + '</h2>' +
-      '<div class="era-sub">' + eraDef.sub + '</div>' +
-    '</div>' +
-    '<div class="era-aggregate">' +
-      '<div class="frac">' + totalUnlocked + '/' + totalAll + '</div>' +
-      '<div class="pct">' + pct + '% complete</div>' +
-    '</div>';
-  section.appendChild(head);
-
-  var grid = document.createElement("div");
-  grid.className = "card-grid";
-  games.forEach(function (game) { grid.appendChild(buildCard(game)); });
-  section.appendChild(grid);
-
-  return section;
-}
-
 function render(data) {
-  var byEra = {};
-  data.games.forEach(function (game) {
-    var meta = GAME_META[game.key];
-    var eraCode = meta ? meta.era : "§";
-    (byEra[eraCode] = byEra[eraCode] || []).push(game);
+  // Newest release first. Games with no known release_date (fetch
+  // failure, delisted store page, etc.) sort to the bottom rather than
+  // being mistaken for the oldest entries.
+  var games = data.games.slice().sort(function (a, b) {
+    if (!a.release_date) return 1;
+    if (!b.release_date) return -1;
+    return b.release_date.localeCompare(a.release_date);
   });
 
-  var container = document.getElementById("eras");
-  ERAS.forEach(function (eraDef) {
-    var games = byEra[eraDef.code];
-    if (games && games.length) {
-      container.appendChild(buildEraSection(eraDef, games));
-    }
-  });
+  var container = document.getElementById("games");
+  games.forEach(function (game) { container.appendChild(buildCard(game)); });
 
   var updated = document.getElementById("updated");
   if (data.generated_at) {
@@ -366,7 +287,7 @@ function render(data) {
 }
 
 function renderError() {
-  var container = document.getElementById("eras");
+  var container = document.getElementById("games");
   container.innerHTML = '<p style="text-align:center;color:var(--text-muted);font-family:\'IBM Plex Mono\',monospace;">' +
     'Could not load save data — try again shortly.</p>';
 }
