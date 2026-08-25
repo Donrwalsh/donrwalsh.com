@@ -101,6 +101,12 @@ body{
   line-height:1.3;
   min-height:44px;
 }
+.card .note{
+  font-family:'IBM Plex Sans',sans-serif;
+  font-size:11px;
+  color:var(--text-muted);
+  margin:-4px 0 6px;
+}
 .card .released{
   font-family:'IBM Plex Mono',monospace;
   font-size:11px;
@@ -191,6 +197,13 @@ function buildCard(game) {
   var h3 = document.createElement("h3");
   h3.textContent = game.name || game.key;
   card.appendChild(h3);
+
+  if (game.note) {
+    var note = document.createElement("div");
+    note.className = "note";
+    note.textContent = game.note;
+    card.appendChild(note);
+  }
 
   var released = document.createElement("div");
   released.className = "released";

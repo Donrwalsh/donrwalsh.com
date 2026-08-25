@@ -17,6 +17,7 @@ while IFS= read -r entry; do
   key=$(jq -r '.key' <<< "$entry")
   appid=$(jq -r '.app_id' <<< "$entry")
   date_override=$(jq -r '.release_date_override // ""' <<< "$entry")
+  note=$(jq -r '.note // ""' <<< "$entry")
 
   player=$(curl -sf "https://api.steampowered.com/ISteamUserStats/GetUserStatsForGame/v0002/?appid=${appid}&key=${STEAM_API_KEY}&steamid=${STEAM_ID}" || echo '{}')
   schema=$(curl -sf "https://api.steampowered.com/ISteamUserStats/GetSchemaForGame/v2/?key=${STEAM_API_KEY}&appid=${appid}" || echo '{}')
@@ -35,6 +36,7 @@ while IFS= read -r entry; do
     --arg key "$key" \
     --argjson appid "$appid" \
     --arg date_override "$date_override" \
+    --arg note "$note" \
     '
     ($schema.game.availableGameStats.achievements // []) as $sch
     | ($player.playerstats.achievements // [] | map(select(.name != null) | {(.name): .achieved}) | add // {}) as $plmap
@@ -49,6 +51,7 @@ while IFS= read -r entry; do
         name: $gname,
         platform: "Steam",
         release_date: $release_date,
+        note: (if $note != "" then $note else null end),
         achievements: [
           $sch[] | { id: .name, name: (.displayName // .name), unlocked: (($plmap[.name] // 0) == 1) }
         ]

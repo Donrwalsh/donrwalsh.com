@@ -1,5 +1,5 @@
 [
-  { "key": "ff1", "app_id": 1173770, "release_date_override": "1987-12-18" },
+  { "key": "ff1", "app_id": 1173770, "release_date_override": "1987-12-18", "note": "(Pixel Remaster)" },
   { "key": "ff2", "app_id": 1173780 },
   { "key": "ff3", "app_id": 1173790 },
   { "key": "ff3-3d-remake", "app_id": 239120 },
