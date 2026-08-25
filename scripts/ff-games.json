@@ -1,15 +1,62 @@
 [
-  { "key": "ff1", "app_id": 1173770, "release_date_override": "1987-12-18", "note": "(Pixel Remaster)" },
-  { "key": "ff2", "app_id": 1173780 },
-  { "key": "ff3", "app_id": 1173790 },
-  { "key": "ff3-3d-remake", "app_id": 239120 },
-  { "key": "ff4", "app_id": 1173800 },
-  { "key": "ff4-3d-remake", "app_id": 312750 },
-  { "key": "ff4-after-years", "app_id": 346830 },
-  { "key": "ff5", "app_id": 1173810 },
-  { "key": "ff6", "app_id": 1173820 },
-  { "key": "ff7-2013", "app_id": 39140 },
-  { "key": "ff7", "app_id": 3837340 },
+  {
+    "key": "ff1",
+    "app_id": 1173770,
+    "release_date_override": "1987-12-18",
+    "note": "(Pixel Remaster)"
+  },
+  {
+    "key": "ff2",
+    "app_id": 1173780,
+    "release_date_override": "1988-12-17",
+    "note": "(Pixel Remaster)"
+  },
+  {
+    "key": "ff3",
+    "app_id": 1173790,
+    "release_date_override": "1990-04-27",
+    "note": "(Pixel Remaster)"
+  },
+  {
+    "key": "ff3-3d-remake",
+    "app_id": 239120,
+    "release_date_override": "2006-08-24"
+  },
+  {
+    "key": "ff4",
+    "app_id": 1173800,
+    "release_date_override": "1991-07-19",
+    "note": "(Pixel Remaster)"
+  },
+  {
+    "key": "ff4-3d-remake",
+    "app_id": 312750,
+    "release_date_override": "2007-12-30"
+  },
+  {
+    "key": "ff4-after-years",
+    "app_id": 346830,
+    "release_date_override": "2008-02-18"
+  },
+  {
+    "key": "ff5",
+    "app_id": 1173810,
+    "release_date_override": "1992-12-06",
+    "note": "(Pixel Remaster)"
+  },
+  {
+    "key": "ff6",
+    "app_id": 1173820,
+    "release_date_override": "1994-04-02",
+    "note": "(Pixel Remaster)"
+  },
+  {
+    "key": "ff7-2013",
+    "app_id": 39140,
+    "release_date_override": "1997-01-31",
+    "note": "(2013)"
+  },
+  { "key": "ff7", "app_id": 3837340, "release_date_override": "1997-01-31" },
   { "key": "ff7-crisis-core", "app_id": 1608070 },
   { "key": "ff7-remake", "app_id": 1462040 },
   { "key": "ff7-rebirth", "app_id": 2909400 },
