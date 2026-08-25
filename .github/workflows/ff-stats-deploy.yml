@@ -1,0 +1,24 @@
+name: Refresh FF Tracker Data
+
+# Triggers a Coolify redeploy on a schedule. The Steam data fetch itself
+# happens inside the Docker build (not yet added to this repo) — this
+# workflow's only job is to ask Coolify to rebuild+redeploy so that build
+# step runs again and picks up fresh stats.
+
+on:
+  schedule:
+    - cron: "0 13 * * *" # daily @ 13:00 UTC — adjust to taste
+  workflow_dispatch:
+
+jobs:
+  trigger-deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Call Coolify deploy webhook
+        run: |
+          curl -sf -X POST "${{ secrets.COOLIFY_WEBHOOK_URL }}" \
+            -H "Authorization: Bearer ${{ secrets.COOLIFY_API_TOKEN }}"
+        # NOTE: confirm this against your Coolify instance's actual webhook
+        # docs (Settings -> Webhooks / API token for this resource) —
+        # some versions want the token as a query param on the URL instead
+        # of a Bearer header. Update this step once verified.
