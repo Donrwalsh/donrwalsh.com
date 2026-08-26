@@ -261,13 +261,14 @@
           card.appendChild(note);
         }
 
+        var bottom = document.createElement("div");
+        bottom.className = "card-bottom";
+
         var released = document.createElement("div");
         released.className = "released";
         released.textContent = formatReleaseDate(game.release_date);
-        card.appendChild(released);
+        bottom.appendChild(released);
 
-        var bottom = document.createElement("div");
-        bottom.className = "card-bottom";
         bottom.appendChild(buildGauge(game.unlocked, game.total));
 
         var stats = document.createElement("div");
