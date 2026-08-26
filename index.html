@@ -67,11 +67,24 @@
         margin: 0 auto;
         line-height: 1.6;
       }
+      .page-head .global-progress {
+        font-family: "IBM Plex Mono", monospace;
+        font-size: 18px;
+        margin-top: 22px;
+      }
+      .page-head .global-progress .frac {
+        color: var(--text-muted);
+        margin-right: 10px;
+      }
+      .page-head .global-progress .pct {
+        color: var(--gold-bright);
+        font-weight: 600;
+      }
       .page-head .updated {
         font-family: "IBM Plex Mono", monospace;
         font-size: 11px;
         color: var(--text-muted);
-        margin-top: 18px;
+        margin-top: 10px;
       }
 
       .card-grid {
@@ -198,6 +211,7 @@
         Tracking my completion of every (non-MMO) Final Fantasy title available
         on Steam.
       </p>
+      <div class="global-progress" id="global-progress"></div>
       <div class="updated" id="updated"></div>
     </div>
 
@@ -303,6 +317,29 @@
         games.forEach(function (game) {
           container.appendChild(buildCard(game));
         });
+
+        var totalUnlocked = data.games.reduce(function (sum, g) {
+          return sum + g.unlocked;
+        }, 0);
+        var totalAll = data.games.reduce(function (sum, g) {
+          return sum + g.total;
+        }, 0);
+        var totalPct =
+          totalAll > 0 ? Math.floor((totalUnlocked * 100) / totalAll) : 0;
+
+        var globalProgress = document.getElementById("global-progress");
+        var globalFrac = document.createElement("span");
+        globalFrac.className = "frac";
+        globalFrac.textContent =
+          totalUnlocked.toLocaleString() +
+          " / " +
+          totalAll.toLocaleString() +
+          " achievements";
+        var globalPct = document.createElement("span");
+        globalPct.className = "pct";
+        globalPct.textContent = totalPct + "%";
+        globalProgress.appendChild(globalFrac);
+        globalProgress.appendChild(globalPct);
 
         var updated = document.getElementById("updated");
         if (data.generated_at) {
