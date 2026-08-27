@@ -2,369 +2,996 @@
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <title>Final Fantasy Achievement Tracker</title>
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1, shrink-to-fit=no"
+    />
+    <title>Don R. Walsh</title>
+    <meta
+      name="description"
+      content="Hi, I'm Don. Full-stack developer for about seven years. I also read a lot, dance, paint Warhammer 40k, chip away at Final Fantasy achievements, and have a dog."
+    />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Outfit:wght@500;600;700&family=Inter:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap"
+      rel="stylesheet"
+    />
     <style>
-      @import url("https://fonts.googleapis.com/css2?family=Cinzel:wght@500;700&family=Spectral:ital,wght@0,400;0,600;1,400&family=IBM+Plex+Sans:wght@400;500&family=IBM+Plex+Mono:wght@500;600&display=swap");
-
       :root {
-        --bg: #12162b;
-        --panel: #1b2040;
-        --panel-hi: #232a52;
-        --border: #3a3f6b;
-        --gold: #b8933f;
-        --gold-bright: #d9b869;
-        --teal: #4fb8ac;
-        --text: #ece6d8;
-        --text-muted: #8e93b8;
-        --danger-empty: #2a2f52;
+        --bg: #ffffff;
+        --ink: #171b20;
+        --ink-soft: #5a6169;
+        --line: #e6e6e2;
+        --navy: #26344a;
+        --navy-soft: #eef1f5;
+        --warm-bg: #fbf5ef;
+        --warm-line: #e9dccb;
+        --clay: #b0512f;
+        --clay-soft: #f3e2d8;
+        --rail: 320px;
       }
-
-      * {
+      *,
+      *::before,
+      *::after {
         box-sizing: border-box;
       }
-      html,
       body {
         margin: 0;
-        padding: 0;
         background: var(--bg);
+        color: var(--ink);
+        font-family: "Inter", system-ui, sans-serif;
+        font-size: 16px;
+        line-height: 1.65;
       }
-      body {
-        font-family: "IBM Plex Sans", sans-serif;
-        color: var(--text);
-        padding: 56px 24px 100px;
-        background:
-          radial-gradient(
-            ellipse at 20% -10%,
-            rgba(184, 147, 63, 0.08),
-            transparent 45%
-          ),
-          radial-gradient(
-            ellipse at 90% 10%,
-            rgba(79, 184, 172, 0.06),
-            transparent 40%
-          ),
-          var(--bg);
-      }
-
-      .page-head {
-        max-width: 1040px;
-        margin: 0 auto 64px;
-        text-align: center;
-      }
-      .page-head h1 {
-        font-family: "Cinzel", serif;
-        font-weight: 700;
-        font-size: clamp(30px, 4vw, 46px);
-        margin: 0 0 10px;
-        letter-spacing: 0.02em;
-        color: var(--gold-bright);
-      }
-      .page-head p {
-        color: var(--text-muted);
-        font-size: 15px;
-        max-width: 100%;
-        margin: 0 auto;
-        line-height: 1.6;
-      }
-      .page-head .global-progress {
-        font-family: "IBM Plex Mono", monospace;
-        font-size: 18px;
-        margin-top: 22px;
-      }
-      .page-head .global-progress .frac {
-        color: var(--text-muted);
-        margin-right: 10px;
-      }
-      .page-head .global-progress .pct {
-        color: var(--gold-bright);
+      h1,
+      h2,
+      h3 {
+        font-family: "Outfit", sans-serif;
         font-weight: 600;
+        margin: 0;
+        letter-spacing: -0.01em;
       }
-      .page-head .updated {
+      .mono {
         font-family: "IBM Plex Mono", monospace;
-        font-size: 11px;
-        color: var(--text-muted);
-        margin-top: 10px;
+      }
+      a {
+        color: inherit;
+      }
+      img {
+        max-width: 100%;
+        display: block;
       }
 
-      .card-grid {
-        max-width: 1040px;
-        margin: 0 auto;
-        display: grid;
-        grid-template-columns: repeat(auto-fill, minmax(230px, 1fr));
-        gap: 16px;
-      }
-
-      .card {
-        position: relative;
-        background: linear-gradient(180deg, var(--panel-hi), var(--panel));
-        border: 1px solid var(--border);
-        border-radius: 3px;
-        padding: 20px 18px 18px;
+      /* ---- Fixed spine ---- */
+      .spine {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: var(--rail);
+        height: 100vh;
+        background: var(--navy);
+        color: #fff;
+        padding: 44px 34px;
         display: flex;
         flex-direction: column;
+        transition: background 700ms ease;
       }
-      .card::before,
-      .card::after {
-        content: "";
-        position: absolute;
-        width: 9px;
-        height: 9px;
-        border: 1px solid var(--gold);
-        transform: rotate(45deg);
-        top: -5px;
+      .spine.warm {
+        background: var(--clay);
       }
-      .card::before {
-        left: 16px;
+      .spine .s-name {
+        font-family: "Outfit", sans-serif;
+        font-weight: 700;
+        font-size: 1.25rem;
       }
-      .card::after {
-        right: 16px;
+      .spine .s-role {
+        font-family: "IBM Plex Mono", monospace;
+        font-size: 0.8rem;
+        color: rgba(255, 255, 255, 0.72);
+        margin-top: 4px;
       }
-      .card.over-half::before {
-        background: var(--gold);
+      .spine .s-line {
+        font-size: 0.9rem;
+        color: rgba(255, 255, 255, 0.9);
+        margin-top: 22px;
+        max-width: 30ch;
       }
-      .card.complete::after {
-        background: var(--gold-bright);
-        border-color: var(--gold-bright);
+      .spine nav {
+        margin-top: 34px;
+        display: flex;
+        flex-direction: column;
+        gap: 2px;
+      }
+      .spine nav a {
+        font-family: "IBM Plex Mono", monospace;
+        font-size: 0.82rem;
+        text-decoration: none;
+        color: rgba(255, 255, 255, 0.8);
+        padding: 7px 0;
+        border-bottom: 1px solid rgba(255, 255, 255, 0.12);
+      }
+      .spine nav a:hover {
+        color: #fff;
+      }
+      .spine .s-contact {
+        margin-top: auto;
+        display: flex;
+        flex-direction: column;
+        gap: 6px;
+        padding-top: 24px;
+      }
+      .spine .s-contact a {
+        font-family: "IBM Plex Mono", monospace;
+        font-size: 0.78rem;
+        color: rgba(255, 255, 255, 0.85);
+        text-decoration: none;
+      }
+      .spine .s-contact a:hover {
+        color: #fff;
+        text-decoration: underline;
+      }
+      .spine .s-dog {
+        margin-top: 18px;
+        padding-top: 16px;
+        border-top: 1px solid rgba(255, 255, 255, 0.18);
+        font-size: 0.78rem;
+        color: rgba(255, 255, 255, 0.78);
+        line-height: 1.55;
       }
 
-      .card h3 {
-        font-family: "Spectral", serif;
-        font-size: 17px;
-        font-weight: 600;
-        margin: 0 0 6px;
-        line-height: 1.3;
-        min-height: 44px;
+      /* ---- Scrolling content ---- */
+      .shell {
+        margin-left: var(--rail);
       }
-      .card .note {
-        font-family: "IBM Plex Sans", sans-serif;
-        font-size: 11px;
-        color: var(--text-muted);
-        margin: -4px 0 6px;
+      .col {
+        max-width: 720px;
+        padding: 0 44px;
       }
-      .card .released {
+      section {
+        padding: 60px 0;
+        border-bottom: 1px solid var(--line);
+      }
+      .eyebrow {
         font-family: "IBM Plex Mono", monospace;
-        font-size: 11px;
-        letter-spacing: 0.04em;
-        color: var(--text-muted);
+        font-size: 0.74rem;
+        letter-spacing: 0.1em;
+        text-transform: uppercase;
+        color: var(--navy);
         margin-bottom: 14px;
       }
-
-      .card-bottom {
-        margin-top: auto;
+      h2 {
+        font-size: 1.5rem;
+        margin-bottom: 26px;
       }
 
-      .gauge {
+      .hero {
+        padding-top: 96px;
+      }
+      .hero h1 {
+        font-size: clamp(2rem, 3.6vw, 2.7rem);
+        line-height: 1.2;
+        max-width: 20ch;
+      }
+      .hero p.lede {
+        max-width: 56ch;
+        color: var(--ink-soft);
+        margin-top: 20px;
+        font-size: 1.05rem;
+      }
+      .hero-cta {
         display: flex;
-        gap: 3px;
-        margin-bottom: 10px;
+        gap: 12px;
+        margin-top: 26px;
+        flex-wrap: wrap;
       }
-      .gauge .seg {
-        height: 7px;
-        flex: 1;
-        background: var(--danger-empty);
-        border-radius: 1px;
+      .btn {
+        font-family: "IBM Plex Mono", monospace;
+        font-size: 0.82rem;
+        padding: 12px 20px;
+        border-radius: 5px;
+        text-decoration: none;
       }
-      .gauge .seg.filled {
-        background: var(--teal);
+      .btn-primary {
+        background: var(--navy);
+        color: #fff;
       }
-      .gauge .seg.filled.complete {
-        background: var(--gold-bright);
+      .btn-primary:hover {
+        background: #1b2637;
+      }
+      .btn-ghost {
+        border: 1px solid var(--line);
+        color: var(--ink);
+      }
+      .btn-ghost:hover {
+        border-color: var(--navy);
+        color: var(--navy);
       }
 
-      .card-stats {
+      .role {
+        padding: 20px 0;
+        border-top: 1px solid var(--line);
+      }
+      .role:first-of-type {
+        border-top: none;
+      }
+      .role-top {
         display: flex;
         justify-content: space-between;
-        align-items: baseline;
-        font-family: "IBM Plex Mono", monospace;
+        flex-wrap: wrap;
+        gap: 6px;
       }
-      .card-stats .frac {
-        font-size: 13px;
-        color: var(--text-muted);
-      }
-      .card-stats .pct {
-        font-size: 15px;
+      .role-org {
         font-weight: 600;
-        color: var(--text);
       }
-      .card-stats .pct.complete {
-        color: var(--gold-bright);
+      .role-dates {
+        font-family: "IBM Plex Mono", monospace;
+        font-size: 0.76rem;
+        color: var(--ink-soft);
+      }
+      .role-sub {
+        font-size: 0.86rem;
+        color: var(--navy);
+        margin: 5px 0 8px;
+      }
+      .role p {
+        margin: 0;
+        color: var(--ink-soft);
+        font-size: 0.92rem;
       }
 
-      .side-note {
-        max-width: 1040px;
-        margin: 70px auto 0;
-        padding-top: 22px;
-        border-top: 1px dashed var(--border);
+      .proj {
+        padding: 20px 0;
+        border-top: 1px solid var(--line);
+        display: flex;
+        justify-content: space-between;
+        gap: 16px;
+        flex-wrap: wrap;
+      }
+      .proj:first-of-type {
+        border-top: none;
+      }
+      .proj h3 {
+        font-size: 1.05rem;
+        margin-bottom: 6px;
+      }
+      .proj h3 a {
+        text-decoration: none;
+      }
+      .proj h3 a:hover {
+        color: var(--navy);
+      }
+      .proj p {
+        margin: 0 0 8px;
+        color: var(--ink-soft);
+        font-size: 0.9rem;
+        max-width: 48ch;
+      }
+      .tag {
         font-family: "IBM Plex Mono", monospace;
-        font-size: 11.5px;
-        color: var(--text-muted);
+        font-size: 0.72rem;
+        color: var(--navy);
+        background: var(--navy-soft);
+        padding: 2px 8px;
+        border-radius: 3px;
+        margin-right: 6px;
+        display: inline-block;
+      }
+      .status-pill {
+        font-family: "IBM Plex Mono", monospace;
+        font-size: 0.72rem;
+        color: var(--ink-soft);
+        border: 1px solid var(--line);
+        padding: 4px 10px;
+        border-radius: 20px;
+        white-space: nowrap;
+        height: fit-content;
+      }
+
+      .transition {
+        background: var(--navy);
+        color: #fff;
+        padding: 44px;
+      }
+      .transition p.small {
+        font-family: "IBM Plex Mono", monospace;
+        font-size: 0.76rem;
+        letter-spacing: 0.08em;
+        text-transform: uppercase;
+        color: #a9b6c9;
+        margin-bottom: 10px;
+      }
+      .transition h2 {
+        color: #fff;
+        font-size: clamp(1.4rem, 2.6vw, 1.9rem);
+        max-width: 28ch;
+        margin: 0;
+      }
+
+      /* ---- Personal ---- */
+      .personal {
+        background: var(--warm-bg);
+        border-bottom: none;
+      }
+      .personal .eyebrow {
+        color: var(--clay);
+      }
+      .personal .col p.intro {
+        color: #5a4f42;
+        font-size: 1.04rem;
+        max-width: 60ch;
+        margin: 0 0 40px;
+      }
+      .pgrid {
+        display: grid;
+        grid-template-columns: repeat(2, 1fr);
+        gap: 24px;
+      }
+      .pcard {
+        background: #fff;
+        border: 1px solid var(--warm-line);
+        border-radius: 10px;
+        padding: 24px;
+      }
+      .pcard h3 {
+        font-size: 1.08rem;
+        margin-bottom: 10px;
+        display: flex;
+        align-items: center;
+        gap: 8px;
+      }
+      .pcard p {
+        color: #6b5f50;
+        font-size: 0.92rem;
+        margin: 0 0 14px;
+      }
+      .pcard a.plink {
+        font-family: "IBM Plex Mono", monospace;
+        font-size: 0.82rem;
+        text-decoration: none;
+        color: var(--clay);
+        border-bottom: 1px solid var(--clay);
+      }
+      .stat-card {
+        display: flex;
+        align-items: baseline;
+        gap: 14px;
+        margin-bottom: 8px;
+      }
+      .stat-card .num {
+        font-family: "Outfit", sans-serif;
+        font-weight: 700;
+        font-size: 2.2rem;
+        color: var(--clay);
+      }
+      .stat-card .of {
+        font-family: "IBM Plex Mono", monospace;
+        font-size: 0.82rem;
+        color: #8a7a64;
+      }
+      .progress-track {
+        height: 8px;
+        border-radius: 6px;
+        background: var(--clay-soft);
+        overflow: hidden;
+        margin: 12px 0 14px;
+      }
+      .progress-fill {
+        height: 100%;
+        width: 30.17%;
+        background: var(--clay);
+        border-radius: 6px;
+      }
+      /* ---- Personal photo cards (full width) ---- */
+      .photocard {
+        background: #fff;
+        border: 1px solid var(--warm-line);
+        border-radius: 10px;
+        padding: 24px;
+        margin-bottom: 24px;
+      }
+      .photocard:last-child {
+        margin-bottom: 0;
+      }
+      .photocard h3 {
+        font-size: 1.08rem;
+        margin-bottom: 10px;
+        display: flex;
+        align-items: center;
+        gap: 8px;
+      }
+      .photocard > p {
+        color: #6b5f50;
+        font-size: 0.92rem;
+        margin: 0 0 16px;
+        max-width: 60ch;
+      }
+
+      .shots {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 12px;
+      }
+      .shots > * {
+        aspect-ratio: 3 / 2;
+        border-radius: 8px;
+        overflow: hidden;
+      }
+      .shots .lead {
+        grid-column: 1 / -1;
+        aspect-ratio: 16 / 7;
+      }
+
+      .photoslot {
+        border: 1.5px dashed #c9b79e;
+        background: repeating-linear-gradient(
+          45deg,
+          #f6ede1,
+          #f6ede1 10px,
+          #f1e4d3 10px,
+          #f1e4d3 20px
+        );
+        display: flex;
+        align-items: center;
+        justify-content: center;
         text-align: center;
-        line-height: 1.8;
+        padding: 12px;
+      }
+      .photoslot span {
+        font-family: "IBM Plex Mono", monospace;
+        font-size: 0.72rem;
+        color: #9c8567;
+      }
+
+      a.shot {
+        display: block;
+        cursor: zoom-in;
+        background: #f1e4d3;
+      }
+      a.shot img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        transition: transform 400ms ease;
+      }
+      a.shot:hover img {
+        transform: scale(1.04);
+      }
+      @media (prefers-reduced-motion: reduce) {
+        a.shot img {
+          transition: none;
+        }
+      }
+      /* Slide the Dancing previews up so more of the top of each frame shows.
+         Lower the percentage to slide further up. */
+      .photocard.dancing .shots img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        object-position: center 37.5%;
+      }
+      .photocard.dancing .shots a:nth-of-type(1) img {
+        object-position: center 45%;
+      }
+      .photocard.dancing .shots a:nth-of-type(2) img {
+        object-position: center 15%;
+      }
+
+      /* ---- Lightbox ---- */
+      .lb {
+        position: fixed;
+        inset: 0;
+        z-index: 100;
+        display: none;
+        background: rgba(20, 16, 12, 0.92);
+      }
+      .lb.open {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+      }
+      .lb img {
+        max-width: 92vw;
+        max-height: 88vh;
+        object-fit: contain;
+        border-radius: 4px;
+        box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5);
+      }
+      .lb button {
+        position: absolute;
+        background: none;
+        border: none;
+        color: #fff;
+        cursor: pointer;
+        font-family: "IBM Plex Mono", monospace;
+        padding: 16px;
+        line-height: 1;
+      }
+      .lb .lb-close {
+        top: 8px;
+        right: 12px;
+        font-size: 1.4rem;
+      }
+      .lb .lb-prev,
+      .lb .lb-next {
+        top: 50%;
+        transform: translateY(-50%);
+        font-size: 2rem;
+      }
+      .lb .lb-prev {
+        left: 8px;
+      }
+      .lb .lb-next {
+        right: 8px;
+      }
+      .lb .lb-count {
+        position: absolute;
+        bottom: 16px;
+        left: 0;
+        right: 0;
+        text-align: center;
+        color: #cbb89f;
+        font-family: "IBM Plex Mono", monospace;
+        font-size: 0.8rem;
+      }
+
+      footer {
+        background: var(--warm-bg);
+        padding: 56px 0 44px;
+      }
+      footer h2 {
+        font-size: clamp(1.4rem, 2.6vw, 1.9rem);
+        max-width: 20ch;
+        margin-bottom: 14px;
+      }
+      footer p.sub {
+        color: #6b5f50;
+        margin-bottom: 24px;
+      }
+      .contact-row {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 10px;
+      }
+      .contact-row a {
+        font-family: "IBM Plex Mono", monospace;
+        font-size: 0.82rem;
+        text-decoration: none;
+        color: var(--ink);
+        border: 1px solid var(--warm-line);
+        background: #fff;
+        padding: 10px 15px;
+        border-radius: 6px;
+      }
+      .contact-row a:hover {
+        border-color: var(--clay);
+        color: var(--clay);
+      }
+      .fine {
+        margin-top: 36px;
+        font-family: "IBM Plex Mono", monospace;
+        font-size: 0.74rem;
+        color: #9c8567;
+      }
+
+      @media (max-width: 920px) {
+        .spine {
+          position: static;
+          width: auto;
+          height: auto;
+          flex-direction: row;
+          flex-wrap: wrap;
+          align-items: center;
+          gap: 10px 24px;
+          padding: 22px 24px;
+        }
+        .spine .s-line,
+        .spine nav,
+        .spine .s-dog {
+          display: none;
+        }
+        .spine .s-contact {
+          margin: 0;
+          flex-direction: row;
+          padding: 0;
+        }
+        .shell {
+          margin-left: 0;
+        }
+        .col {
+          padding: 0 24px;
+        }
+        .pgrid {
+          grid-template-columns: 1fr;
+        }
+        .shots {
+          grid-template-columns: 1fr;
+        }
+        .shots .lead {
+          aspect-ratio: 3 / 2;
+        }
+        .hero {
+          padding-top: 48px;
+        }
       }
     </style>
   </head>
   <body>
-    <div class="page-head">
-      <h1>The Crystal Chronicles</h1>
-      <p>
-        Tracking my completion of every (non-MMO) Final Fantasy title available
-        on Steam.
+    <aside class="spine" id="spine">
+      <div class="s-name">Don R. Walsh</div>
+      <div class="s-role">Full-stack developer</div>
+      <p class="s-line">
+        Building software about seven years, mostly consulting. Now into agentic
+        AI tools.
       </p>
-      <div class="global-progress" id="global-progress"></div>
-      <div class="updated" id="updated"></div>
+      <nav>
+        <a href="#experience">Experience</a>
+        <a href="#work">Projects</a>
+        <a href="#beyond">Off the clock</a>
+        <a href="#contact">Contact</a>
+      </nav>
+      <div class="s-contact">
+        <a href="mailto:donrwalsh@gmail.com">donrwalsh@gmail.com</a>
+        <a href="https://github.com/Donrwalsh">GitHub</a>
+        <a href="https://www.linkedin.com/in/don-walsh-71b93054/">LinkedIn</a>
+      </div>
+      <p class="s-dog">
+        I've also got a dog. They think the workday ends at 4 and won't hear
+        otherwise. Photos soon.
+      </p>
+    </aside>
+
+    <div class="shell">
+      <section class="hero col" style="border-bottom: none">
+        <p class="eyebrow">Full-stack developer</p>
+        <h1>Hi, I'm Don. I've been building software for about seven years.</h1>
+        <p class="lede">
+          Most of that was consulting work at Perficient and Creed Interactive,
+          plus a stretch in-house at Cogency Global. I came up self-taught and I
+          still put time into the basics. These days I'm mostly playing with
+          agentic AI tools.
+        </p>
+        <div class="hero-cta">
+          <a class="btn btn-primary" href="mailto:donrwalsh@gmail.com"
+            >Send me an email</a
+          >
+          <a class="btn btn-ghost" href="/resume.pdf">My résumé</a>
+          <a class="btn btn-ghost" href="#beyond">Jump to the personal bit</a>
+        </div>
+      </section>
+
+      <section id="experience" class="col">
+        <p class="eyebrow">Career</p>
+        <h2>Where I've worked</h2>
+        <div class="role">
+          <div class="role-top">
+            <span class="role-org">Cogency Global, Inc.</span
+            ><span class="role-dates">Jan 2024 – Jun 2025</span>
+          </div>
+          <div class="role-sub">Application Developer</div>
+          <p>
+            I joined as an Application Developer and ended up being the one who
+            talked through the technical side with stakeholders and made a call
+            when we needed one. I spent a lot of time in code review with
+            teammates too.
+          </p>
+        </div>
+        <div class="role">
+          <div class="role-top">
+            <span class="role-org">Creed Interactive</span
+            ><span class="role-dates">Feb 2021 – Sep 2023</span>
+          </div>
+          <div class="role-sub">
+            Senior Developer (ConvergeOne) · Developer (Delta Dental of
+            Michigan)
+          </div>
+          <p>
+            I was senior dev on the ConvergeOne account and a developer on Delta
+            Dental of Michigan. I kept a custom React chat app healthy, and
+            helped get 2,600-plus QA tests done when the timeline got tight.
+          </p>
+        </div>
+        <div class="role">
+          <div class="role-top">
+            <span class="role-org">Perficient, Inc.</span
+            ><span class="role-dates">Mar 2018 – Feb 2021</span>
+          </div>
+          <div class="role-sub">
+            Poly · Mitsubishi UFJ Financial Group · Adobe
+          </div>
+          <p>
+            I worked with Poly, Mitsubishi UFJ Financial Group, and Adobe here.
+            Mostly I kept a trust and custody portal running, front to back.
+            They gave me an innovation award in 2019.
+          </p>
+        </div>
+        <div class="role">
+          <div class="role-top">
+            <span class="role-org">Do Good Tech</span
+            ><span class="role-dates">Aug 2017 – Feb 2018</span>
+          </div>
+          <div class="role-sub">Front End Developer</div>
+          <p>
+            My first dev job. I moved an old AngularJS marketing site over to
+            Angular 4, quickly.
+          </p>
+        </div>
+      </section>
+
+      <section id="work" class="col">
+        <p class="eyebrow">Building now</p>
+        <h2>Stuff I'm building</h2>
+        <div class="proj">
+          <div>
+            <h3>
+              <a href="https://connections.donrwalsh.com"
+                >NYT Connections Solver</a
+              >
+            </h3>
+            <p>
+              I wrote a set of fixed strategies for NYT Connections and put them
+              up against LLM guessers. There's a leaderboard. You can try it
+              now.
+            </p>
+            <span class="tag">Docker</span><span class="tag">BullMQ</span
+            ><span class="tag">LLM orchestration</span>
+          </div>
+          <span class="status-pill">Live</span>
+        </div>
+        <div class="proj">
+          <div>
+            <h3>Rules Assistant</h3>
+            <p>
+              I want a tool that answers questions about a big ruleset and shows
+              you where in the text it got the answer. Haven't started yet.
+            </p>
+            <span class="tag">RAG</span><span class="tag">Retrieval</span>
+          </div>
+          <span class="status-pill">Planned</span>
+        </div>
+      </section>
+
+      <div class="transition">
+        <p class="small">Now the other stuff</p>
+        <h2>You're hiring a person, so here's the person.</h2>
+      </div>
+
+      <section id="beyond" class="personal">
+        <div class="col">
+          <p class="eyebrow">Off the clock</p>
+          <p class="intro">
+            My job isn't the whole story, and I'd rather you know the rest of it
+            up front.
+          </p>
+          <div class="pgrid">
+            <div class="pcard">
+              <h3>📚 Reading</h3>
+              <p>
+                I treat reading as both a way to broaden my mental models and a
+                favorite way to relax. You can see the full mix of what’s
+                shaping and entertaining my mind on my bookshelf.
+              </p>
+              <a
+                class="plink"
+                href="https://www.goodreads.com/user/show/124432031-don-walsh"
+                >Add me on Goodreads →</a
+              >
+            </div>
+            <div class="pcard">
+              <h3>🎮 Final Fantasy completionist</h3>
+              <div class="stat-card">
+                <span class="num" id="ff-unlocked">378</span
+                ><span class="of" id="ff-of">/ 1,253 achievements</span>
+              </div>
+              <div class="progress-track">
+                <div class="progress-fill" id="ff-fill"></div>
+              </div>
+              <p>
+                <strong>Side Quest:</strong> Unlocking every achievement across
+                the Final Fantasy series on Steam. I'm
+                <span id="ff-sentence">0%</span> of the way there.
+              </p>
+              <a class="plink" href="./ff-tracker.html"
+                >See the current tracker →</a
+              >
+            </div>
+          </div>
+
+          <div class="photocard dancing">
+            <h3>🕺 Dancing</h3>
+            <p>
+              Dancing is how I stay active and social. I’m open to any style,
+              but rhythm dances have my heart.
+            </p>
+            <div class="shots">
+              <a class="shot lead" href="images/dancing-01.jpg"
+                ><img src="images/dancing-01.jpg" alt="…" loading="lazy"
+              /></a>
+              <a class="shot" href="images/dancing-02.jpg"
+                ><img src="images/dancing-02.jpg" alt="…" loading="lazy"
+              /></a>
+              <a class="shot" href="images/dancing-03.jpg"
+                ><img src="images/dancing-03.jpg" alt="…" loading="lazy"
+              /></a>
+            </div>
+          </div>
+
+          <div class="photocard">
+            <h3>⚔️ Warhammer 40k</h3>
+            <p>
+              I paint a Warhammer 40k army. Most of it's assembled. Swap these
+              boxes for real photos whenever.
+            </p>
+            <div class="shots">
+              <div class="photoslot lead"><span>photo: army — lead</span></div>
+              <div class="photoslot"><span>photo: army</span></div>
+              <div class="photoslot"><span>photo: army</span></div>
+            </div>
+          </div>
+
+          <div class="photocard">
+            <h3>🐕 The dog</h3>
+            <p>
+              Oh, and I have a dog. They're convinced the workday ends at 4, and
+              they're usually right. Photos once I get them.
+            </p>
+            <div class="shots">
+              <div class="photoslot lead"><span>photo: dog — lead</span></div>
+              <div class="photoslot"><span>photo: dog</span></div>
+              <div class="photoslot"><span>photo: dog</span></div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <footer id="contact">
+        <div class="col">
+          <h2>Come say hi.</h2>
+          <p class="sub">
+            About the work, the side projects, a book rec, or how far you've
+            gotten in your own FF run. All good.
+          </p>
+          <div class="contact-row">
+            <a href="mailto:donrwalsh@gmail.com">✉ donrwalsh@gmail.com</a>
+            <a href="https://github.com/Donrwalsh">GitHub</a>
+            <a href="https://www.linkedin.com/in/don-walsh-71b93054/"
+              >LinkedIn</a
+            >
+            <a href="https://www.goodreads.com/user/show/124432031-don-walsh"
+              >Goodreads</a
+            >
+            <a href="/resume.pdf">Résumé</a>
+          </div>
+          <p class="fine">Built by Don R. Walsh © 2019–2026 · donrwalsh.com</p>
+        </div>
+      </footer>
     </div>
 
-    <div class="card-grid" id="games"></div>
-
-    <div class="side-note" id="side-note"></div>
-
     <script>
-      function formatReleaseDate(dateStr) {
-        if (!dateStr) return "Release date unknown";
-        var d = new Date(dateStr + "T00:00:00Z");
-        return (
-          "Released " +
-          d.toLocaleDateString(undefined, {
-            year: "numeric",
-            month: "short",
-            day: "numeric",
-            timeZone: "UTC",
-          })
+      var spine = document.getElementById("spine");
+      var beyond = document.getElementById("beyond");
+      if ("IntersectionObserver" in window && beyond) {
+        var obs = new IntersectionObserver(
+          function (entries) {
+            entries.forEach(function (e) {
+              spine.classList.toggle(
+                "warm",
+                e.isIntersecting || e.boundingClientRect.top < 0,
+              );
+            });
+          },
+          { rootMargin: "-45% 0px -45% 0px" },
         );
+        obs.observe(beyond);
       }
 
-      function segCount(unlocked, total) {
-        if (total <= 0) return 0;
-        return Math.round((unlocked / total) * 12);
-      }
+      // ---- Lightbox for .shot links ----
+      (function () {
+        var shots = Array.prototype.slice.call(
+          document.querySelectorAll("a.shot"),
+        );
+        if (!shots.length) return;
 
-      function buildGauge(unlocked, total) {
-        var filled = segCount(unlocked, total);
-        var complete = total > 0 && unlocked === total;
-        var gauge = document.createElement("div");
-        gauge.className = "gauge";
-        for (var i = 0; i < 12; i++) {
-          var seg = document.createElement("div");
-          seg.className =
-            "seg" +
-            (i < filled ? " filled" + (complete ? " complete" : "") : "");
-          gauge.appendChild(seg);
+        var lb = document.createElement("div");
+        lb.className = "lb";
+        lb.innerHTML =
+          '<button class="lb-close" aria-label="Close">✕</button>' +
+          '<button class="lb-prev" aria-label="Previous">‹</button>' +
+          '<img alt="">' +
+          '<button class="lb-next" aria-label="Next">›</button>' +
+          '<div class="lb-count"></div>';
+        document.body.appendChild(lb);
+
+        var img = lb.querySelector("img");
+        var count = lb.querySelector(".lb-count");
+        var group = [],
+          idx = 0;
+
+        function show(i) {
+          idx = (i + group.length) % group.length;
+          var a = group[idx];
+          var thumb = a.querySelector("img");
+          img.src = a.getAttribute("href");
+          img.alt = thumb ? thumb.alt : "";
+          count.textContent =
+            group.length > 1 ? idx + 1 + " / " + group.length : "";
         }
-        return gauge;
-      }
-
-      function buildCard(game) {
-        var card = document.createElement("div");
-        card.className = "card";
-        if (game.total > 0 && game.unlocked / game.total > 0.5) {
-          card.classList.add("over-half");
+        function open(a) {
+          var wrap = a.closest(".shots");
+          group = Array.prototype.slice.call(wrap.querySelectorAll("a.shot"));
+          show(group.indexOf(a));
+          lb.classList.add("open");
+          document.body.style.overflow = "hidden";
         }
-        if (game.total > 0 && game.unlocked === game.total) {
-          card.classList.add("complete");
-        }
-
-        var h3 = document.createElement("h3");
-        h3.textContent = game.name || game.key;
-        card.appendChild(h3);
-
-        if (game.note) {
-          var note = document.createElement("div");
-          note.className = "note";
-          note.textContent = game.note;
-          card.appendChild(note);
+        function close() {
+          lb.classList.remove("open");
+          img.src = "";
+          document.body.style.overflow = "";
         }
 
-        var bottom = document.createElement("div");
-        bottom.className = "card-bottom";
-
-        var released = document.createElement("div");
-        released.className = "released";
-        released.textContent = formatReleaseDate(game.release_date);
-        bottom.appendChild(released);
-
-        bottom.appendChild(buildGauge(game.unlocked, game.total));
-
-        var stats = document.createElement("div");
-        stats.className = "card-stats";
-        var frac = document.createElement("span");
-        frac.className = "frac";
-        frac.textContent = game.unlocked + " / " + game.total;
-        var pct = document.createElement("span");
-        pct.className =
-          "pct" +
-          (game.total > 0 && game.unlocked === game.total ? " complete" : "");
-        pct.textContent = game.percent + "%";
-        stats.appendChild(frac);
-        stats.appendChild(pct);
-        bottom.appendChild(stats);
-        card.appendChild(bottom);
-
-        return card;
-      }
-
-      function render(data) {
-        // Newest release first. Games with no known release_date (fetch
-        // failure, delisted store page, etc.) sort to the bottom rather than
-        // being mistaken for the oldest entries.
-        var games = data.games.slice().sort(function (a, b) {
-          if (!a.release_date) return 1;
-          if (!b.release_date) return -1;
-          return b.release_date.localeCompare(a.release_date);
+        shots.forEach(function (a) {
+          a.addEventListener("click", function (e) {
+            e.preventDefault();
+            open(a);
+          });
         });
-
-        var container = document.getElementById("games");
-        games.forEach(function (game) {
-          container.appendChild(buildCard(game));
+        lb.querySelector(".lb-close").addEventListener("click", close);
+        lb.querySelector(".lb-prev").addEventListener("click", function (e) {
+          e.stopPropagation();
+          show(idx - 1);
         });
+        lb.querySelector(".lb-next").addEventListener("click", function (e) {
+          e.stopPropagation();
+          show(idx + 1);
+        });
+        lb.addEventListener("click", function (e) {
+          if (e.target === lb) close();
+        });
+        document.addEventListener("keydown", function (e) {
+          if (!lb.classList.contains("open")) return;
+          if (e.key === "Escape") close();
+          else if (e.key === "ArrowLeft") show(idx - 1);
+          else if (e.key === "ArrowRight") show(idx + 1);
+        });
+      })();
 
-        var totalUnlocked = data.games.reduce(function (sum, g) {
-          return sum + g.unlocked;
-        }, 0);
-        var totalAll = data.games.reduce(function (sum, g) {
-          return sum + g.total;
-        }, 0);
-        var totalPct =
-          totalAll > 0 ? Math.floor((totalUnlocked * 100) / totalAll) : 0;
+      // ---- Final Fantasy card: live totals from data/ff-progress.json ----
+      // Progressive enhancement. If the fetch fails (offline, file://, a Steam
+      // hiccup on the last deploy) the hardcoded markup values stay put.
+      (function () {
+        fetch("data/ff-progress.json")
+          .then(function (res) {
+            if (!res.ok) throw new Error("bad response");
+            return res.json();
+          })
+          .then(function (data) {
+            var games = data.games || [];
+            var unlocked = games.reduce(function (s, g) {
+              return s + (g.unlocked || 0);
+            }, 0);
+            var total = games.reduce(function (s, g) {
+              return s + (g.total || 0);
+            }, 0);
+            if (total <= 0) return;
 
-        var globalProgress = document.getElementById("global-progress");
-        var globalFrac = document.createElement("span");
-        globalFrac.className = "frac";
-        globalFrac.textContent =
-          totalUnlocked.toLocaleString() +
-          " / " +
-          totalAll.toLocaleString() +
-          " achievements";
-        var globalPct = document.createElement("span");
-        globalPct.className = "pct";
-        globalPct.textContent = totalPct + "%";
-        globalProgress.appendChild(globalFrac);
-        globalProgress.appendChild(globalPct);
+            var elUnlocked = document.getElementById("ff-unlocked");
+            var elOf = document.getElementById("ff-of");
+            var elFill = document.getElementById("ff-fill");
+            var elSentence = document.getElementById("ff-sentence");
 
-        var updated = document.getElementById("updated");
-        if (data.generated_at) {
-          updated.textContent =
-            "Last synced " + new Date(data.generated_at).toLocaleString();
-        }
-
-        document.getElementById("side-note").textContent =
-          "Data pulled from the Steam API for the account's full Final Fantasy library, refreshed on each rebuild.";
-      }
-
-      function renderError() {
-        var container = document.getElementById("games");
-        container.innerHTML =
-          "<p style=\"text-align:center;color:var(--text-muted);font-family:'IBM Plex Mono',monospace;\">" +
-          "Could not load save data — try again shortly.</p>";
-      }
-
-      fetch("data/ff-progress.json")
-        .then(function (res) {
-          if (!res.ok) throw new Error("bad response");
-          return res.json();
-        })
-        .then(render)
-        .catch(renderError);
+            if (elUnlocked) elUnlocked.textContent = unlocked.toLocaleString();
+            if (elOf)
+              elOf.textContent =
+                "/ " + total.toLocaleString() + " achievements";
+            if (elFill) elFill.style.width = (unlocked * 100) / total + "%";
+            if (elSentence)
+              elSentence.textContent =
+                Math.floor((unlocked * 100) / total) + "%";
+          })
+          .catch(function () {
+            /* keep the markup defaults */
+          });
+      })();
     </script>
   </body>
 </html>

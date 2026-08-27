@@ -1,0 +1,370 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Final Fantasy Achievement Tracker</title>
+    <style>
+      @import url("https://fonts.googleapis.com/css2?family=Cinzel:wght@500;700&family=Spectral:ital,wght@0,400;0,600;1,400&family=IBM+Plex+Sans:wght@400;500&family=IBM+Plex+Mono:wght@500;600&display=swap");
+
+      :root {
+        --bg: #12162b;
+        --panel: #1b2040;
+        --panel-hi: #232a52;
+        --border: #3a3f6b;
+        --gold: #b8933f;
+        --gold-bright: #d9b869;
+        --teal: #4fb8ac;
+        --text: #ece6d8;
+        --text-muted: #8e93b8;
+        --danger-empty: #2a2f52;
+      }
+
+      * {
+        box-sizing: border-box;
+      }
+      html,
+      body {
+        margin: 0;
+        padding: 0;
+        background: var(--bg);
+      }
+      body {
+        font-family: "IBM Plex Sans", sans-serif;
+        color: var(--text);
+        padding: 56px 24px 100px;
+        background:
+          radial-gradient(
+            ellipse at 20% -10%,
+            rgba(184, 147, 63, 0.08),
+            transparent 45%
+          ),
+          radial-gradient(
+            ellipse at 90% 10%,
+            rgba(79, 184, 172, 0.06),
+            transparent 40%
+          ),
+          var(--bg);
+      }
+
+      .page-head {
+        max-width: 1040px;
+        margin: 0 auto 64px;
+        text-align: center;
+      }
+      .page-head h1 {
+        font-family: "Cinzel", serif;
+        font-weight: 700;
+        font-size: clamp(30px, 4vw, 46px);
+        margin: 0 0 10px;
+        letter-spacing: 0.02em;
+        color: var(--gold-bright);
+      }
+      .page-head p {
+        color: var(--text-muted);
+        font-size: 15px;
+        max-width: 100%;
+        margin: 0 auto;
+        line-height: 1.6;
+      }
+      .page-head .global-progress {
+        font-family: "IBM Plex Mono", monospace;
+        font-size: 18px;
+        margin-top: 22px;
+      }
+      .page-head .global-progress .frac {
+        color: var(--text-muted);
+        margin-right: 10px;
+      }
+      .page-head .global-progress .pct {
+        color: var(--gold-bright);
+        font-weight: 600;
+      }
+      .page-head .updated {
+        font-family: "IBM Plex Mono", monospace;
+        font-size: 11px;
+        color: var(--text-muted);
+        margin-top: 10px;
+      }
+
+      .card-grid {
+        max-width: 1040px;
+        margin: 0 auto;
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(230px, 1fr));
+        gap: 16px;
+      }
+
+      .card {
+        position: relative;
+        background: linear-gradient(180deg, var(--panel-hi), var(--panel));
+        border: 1px solid var(--border);
+        border-radius: 3px;
+        padding: 20px 18px 18px;
+        display: flex;
+        flex-direction: column;
+      }
+      .card::before,
+      .card::after {
+        content: "";
+        position: absolute;
+        width: 9px;
+        height: 9px;
+        border: 1px solid var(--gold);
+        transform: rotate(45deg);
+        top: -5px;
+      }
+      .card::before {
+        left: 16px;
+      }
+      .card::after {
+        right: 16px;
+      }
+      .card.over-half::before {
+        background: var(--gold);
+      }
+      .card.complete::after {
+        background: var(--gold-bright);
+        border-color: var(--gold-bright);
+      }
+
+      .card h3 {
+        font-family: "Spectral", serif;
+        font-size: 17px;
+        font-weight: 600;
+        margin: 0 0 6px;
+        line-height: 1.3;
+        min-height: 44px;
+      }
+      .card .note {
+        font-family: "IBM Plex Sans", sans-serif;
+        font-size: 11px;
+        color: var(--text-muted);
+        margin: -4px 0 6px;
+      }
+      .card .released {
+        font-family: "IBM Plex Mono", monospace;
+        font-size: 11px;
+        letter-spacing: 0.04em;
+        color: var(--text-muted);
+        margin-bottom: 14px;
+      }
+
+      .card-bottom {
+        margin-top: auto;
+      }
+
+      .gauge {
+        display: flex;
+        gap: 3px;
+        margin-bottom: 10px;
+      }
+      .gauge .seg {
+        height: 7px;
+        flex: 1;
+        background: var(--danger-empty);
+        border-radius: 1px;
+      }
+      .gauge .seg.filled {
+        background: var(--teal);
+      }
+      .gauge .seg.filled.complete {
+        background: var(--gold-bright);
+      }
+
+      .card-stats {
+        display: flex;
+        justify-content: space-between;
+        align-items: baseline;
+        font-family: "IBM Plex Mono", monospace;
+      }
+      .card-stats .frac {
+        font-size: 13px;
+        color: var(--text-muted);
+      }
+      .card-stats .pct {
+        font-size: 15px;
+        font-weight: 600;
+        color: var(--text);
+      }
+      .card-stats .pct.complete {
+        color: var(--gold-bright);
+      }
+
+      .side-note {
+        max-width: 1040px;
+        margin: 70px auto 0;
+        padding-top: 22px;
+        border-top: 1px dashed var(--border);
+        font-family: "IBM Plex Mono", monospace;
+        font-size: 11.5px;
+        color: var(--text-muted);
+        text-align: center;
+        line-height: 1.8;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="page-head">
+      <h1>The Crystal Chronicles</h1>
+      <p>
+        Tracking my completion of every (non-MMO) Final Fantasy title available
+        on Steam.
+      </p>
+      <div class="global-progress" id="global-progress"></div>
+      <div class="updated" id="updated"></div>
+    </div>
+
+    <div class="card-grid" id="games"></div>
+
+    <div class="side-note" id="side-note"></div>
+
+    <script>
+      function formatReleaseDate(dateStr) {
+        if (!dateStr) return "Release date unknown";
+        var d = new Date(dateStr + "T00:00:00Z");
+        return (
+          "Released " +
+          d.toLocaleDateString(undefined, {
+            year: "numeric",
+            month: "short",
+            day: "numeric",
+            timeZone: "UTC",
+          })
+        );
+      }
+
+      function segCount(unlocked, total) {
+        if (total <= 0) return 0;
+        return Math.round((unlocked / total) * 12);
+      }
+
+      function buildGauge(unlocked, total) {
+        var filled = segCount(unlocked, total);
+        var complete = total > 0 && unlocked === total;
+        var gauge = document.createElement("div");
+        gauge.className = "gauge";
+        for (var i = 0; i < 12; i++) {
+          var seg = document.createElement("div");
+          seg.className =
+            "seg" +
+            (i < filled ? " filled" + (complete ? " complete" : "") : "");
+          gauge.appendChild(seg);
+        }
+        return gauge;
+      }
+
+      function buildCard(game) {
+        var card = document.createElement("div");
+        card.className = "card";
+        if (game.total > 0 && game.unlocked / game.total > 0.5) {
+          card.classList.add("over-half");
+        }
+        if (game.total > 0 && game.unlocked === game.total) {
+          card.classList.add("complete");
+        }
+
+        var h3 = document.createElement("h3");
+        h3.textContent = game.name || game.key;
+        card.appendChild(h3);
+
+        if (game.note) {
+          var note = document.createElement("div");
+          note.className = "note";
+          note.textContent = game.note;
+          card.appendChild(note);
+        }
+
+        var bottom = document.createElement("div");
+        bottom.className = "card-bottom";
+
+        var released = document.createElement("div");
+        released.className = "released";
+        released.textContent = formatReleaseDate(game.release_date);
+        bottom.appendChild(released);
+
+        bottom.appendChild(buildGauge(game.unlocked, game.total));
+
+        var stats = document.createElement("div");
+        stats.className = "card-stats";
+        var frac = document.createElement("span");
+        frac.className = "frac";
+        frac.textContent = game.unlocked + " / " + game.total;
+        var pct = document.createElement("span");
+        pct.className =
+          "pct" +
+          (game.total > 0 && game.unlocked === game.total ? " complete" : "");
+        pct.textContent = game.percent + "%";
+        stats.appendChild(frac);
+        stats.appendChild(pct);
+        bottom.appendChild(stats);
+        card.appendChild(bottom);
+
+        return card;
+      }
+
+      function render(data) {
+        // Newest release first. Games with no known release_date (fetch
+        // failure, delisted store page, etc.) sort to the bottom rather than
+        // being mistaken for the oldest entries.
+        var games = data.games.slice().sort(function (a, b) {
+          if (!a.release_date) return 1;
+          if (!b.release_date) return -1;
+          return b.release_date.localeCompare(a.release_date);
+        });
+
+        var container = document.getElementById("games");
+        games.forEach(function (game) {
+          container.appendChild(buildCard(game));
+        });
+
+        var totalUnlocked = data.games.reduce(function (sum, g) {
+          return sum + g.unlocked;
+        }, 0);
+        var totalAll = data.games.reduce(function (sum, g) {
+          return sum + g.total;
+        }, 0);
+        var totalPct =
+          totalAll > 0 ? Math.floor((totalUnlocked * 100) / totalAll) : 0;
+
+        var globalProgress = document.getElementById("global-progress");
+        var globalFrac = document.createElement("span");
+        globalFrac.className = "frac";
+        globalFrac.textContent =
+          totalUnlocked.toLocaleString() +
+          " / " +
+          totalAll.toLocaleString() +
+          " achievements";
+        var globalPct = document.createElement("span");
+        globalPct.className = "pct";
+        globalPct.textContent = totalPct + "%";
+        globalProgress.appendChild(globalFrac);
+        globalProgress.appendChild(globalPct);
+
+        var updated = document.getElementById("updated");
+        if (data.generated_at) {
+          updated.textContent =
+            "Last synced " + new Date(data.generated_at).toLocaleString();
+        }
+
+        document.getElementById("side-note").textContent =
+          "Data pulled from the Steam API for the account's full Final Fantasy library, refreshed on each rebuild.";
+      }
+
+      function renderError() {
+        var container = document.getElementById("games");
+        container.innerHTML =
+          "<p style=\"text-align:center;color:var(--text-muted);font-family:'IBM Plex Mono',monospace;\">" +
+          "Could not load save data — try again shortly.</p>";
+      }
+
+      fetch("data/ff-progress.json")
+        .then(function (res) {
+          if (!res.ok) throw new Error("bad response");
+          return res.json();
+        })
+        .then(render)
+        .catch(renderError);
+    </script>
+  </body>
+</html>
