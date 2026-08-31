@@ -1,0 +1,12 @@
+{
+  "name": "donrwalsh-com",
+  "private": true,
+  "scripts": {
+    "export-resume": "resumed export resume.json -o resume.pdf --theme resume-theme-local --puppeteer-arg=--no-sandbox"
+  },
+  "devDependencies": {
+    "puppeteer": "^24.43.1",
+    "resume-theme-local": "file:./theme",
+    "resumed": "^6.1.0"
+  }
+}

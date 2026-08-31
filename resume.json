@@ -1,0 +1,148 @@
+{
+  "$schema": "https://raw.githubusercontent.com/jsonresume/resume-schema/v1.0.0/schema.json",
+  "basics": {
+    "name": "Don R. Walsh",
+    "label": "Full Stack Developer",
+    "email": "donrwalsh@gmail.com",
+    "url": "https://donrwalsh.com",
+    "summary": "Full-stack developer with seven years across fintech, compliance, and consumer platforms, strongest in TypeScript/React and Node/.NET. Currently building hands-on agentic AI experience after a career break, and am now seeking a full-time or contract full-stack role.",
+    "location": {
+      "city": "Brooklyn Center",
+      "region": "MN",
+      "countryCode": "US"
+    },
+    "profiles": [
+      {
+        "network": "GitHub",
+        "username": "Donrwalsh",
+        "url": "https://github.com/Donrwalsh"
+      },
+      {
+        "network": "LinkedIn",
+        "url": "https://www.linkedin.com/in/don-walsh-71b93054/"
+      }
+    ]
+  },
+  "work": [
+    {
+      "name": "Cogency Global, Inc.",
+      "position": "Application Developer",
+      "startDate": "2024-01-01",
+      "endDate": "2025-06-01",
+      "highlights": [
+        "Led development of two internal tools (Representation Contact Verification Tool, Nonprofit Compliance Management Tool) through to near-completion, handed off for final rollout",
+        "Led technical discussions and stakeholder conversations, mentoring teammates through code reviews and coaching",
+        "Coordinated across 5 operations teams to navigate a complex rollout process while maintaining consistent delivery output"
+      ]
+    },
+    {
+      "name": "Creed Interactive",
+      "position": "Senior Developer",
+      "startDate": "2021-02-01",
+      "endDate": "2023-09-01",
+      "highlights": [
+        "Client ConvergeOne: Maintained and enhanced a custom React chat application; led code reviews and mentored client team",
+        "Client Delta Dental of Michigan: Introduced code quality and testing standards within a SAFe environment for an unfamiliar client stack; directed delivery of 2,600+ QA tests under a tight deadline"
+      ]
+    },
+    {
+      "name": "Perficient, Inc.",
+      "position": "Senior UI Developer / Full Stack Developer / Solutions Developer",
+      "startDate": "2018-03-01",
+      "endDate": "2021-02-01",
+      "highlights": [
+        "Client Mitsubishi UFJ Financial Group: Maintained a trust and custody portal handling ~$2B in transactions annually; received Perficient Innovation Award (2019) for tenacious problem solving",
+        "Client Adobe: Assisted 50+ client teams in transitioning to named user licensing; built a simulated roster REST API and custom BI reporting",
+        "Client Poly: Built navigation-upgrade prototypes that laid the groundwork for a shipped redesign, and implemented frontend updates supporting a company rebrand"
+      ]
+    },
+    {
+      "name": "Do Good Tech",
+      "position": "Front End Developer",
+      "startDate": "2017-08-01",
+      "endDate": "2018-02-01",
+      "highlights": [
+        "Independently migrated a brochureware site from AngularJS to Angular 4 under a strict deadline",
+        "Built frontend features for a coupon redemption application, with additional contributions across the broader site",
+        "Designed and implemented a dynamic-forms system enabling non-technical users to submit and manage site content"
+      ]
+    }
+  ],
+  "education": [
+    {
+      "institution": "University of Minnesota",
+      "area": "Economics",
+      "studyType": "BS",
+      "endDate": "2014-05-01",
+      "courses": ["Mathematics minor", "Statistics minor"]
+    }
+  ],
+  "awards": [
+    {
+      "title": "Perficient Innovation Award",
+      "date": "2019-05-01",
+      "awarder": "Perficient, Inc.",
+      "summary": "Minneapolis Core Values recognition"
+    },
+    {
+      "title": "Certified ScrumMaster",
+      "date": "2018-06-01",
+      "awarder": "Scrum Alliance"
+    }
+  ],
+  "volunteer": [
+    {
+      "organization": "Technovation",
+      "position": "Mentor",
+      "startDate": "2021-01-01",
+      "endDate": "2021-06-01"
+    }
+  ],
+  "publications": [
+    {
+      "name": "Conversational Quantum Computing",
+      "publisher": "Minnesota Developers Conference",
+      "releaseDate": "2022"
+    },
+    {
+      "name": "Automate the Boring Stuff: CI/CD",
+      "publisher": "Spring Meetup",
+      "releaseDate": "2018"
+    }
+  ],
+  "skills": [
+    {
+      "name": "Languages",
+      "keywords": ["TypeScript", "JavaScript", "Python", "C#", "Java", "PHP"]
+    },
+    {
+      "name": "Frontend",
+      "keywords": ["React", "Redux", "Angular 4-20", "HTML", "CSS"]
+    },
+    {
+      "name": "Backend & APIs",
+      "keywords": ["Node.js", "NestJS", ".NET", "Spring", "Spring Boot"]
+    },
+    {
+      "name": "Cloud & DevOps",
+      "keywords": ["AWS", "GCP", "Docker", "Jenkins", "Ansible"]
+    },
+    {
+      "name": "Databases & Search",
+      "keywords": ["SQL Server", "PostgreSQL", "MongoDB", "Elasticsearch"]
+    },
+    {
+      "name": "Other Tools",
+      "keywords": [
+        "Git",
+        "LaTeX",
+        "SVN",
+        "Vagrant",
+        "WordPress",
+        "Adobe Experience Manager",
+        "Groovy",
+        "Kotlin"
+      ]
+    }
+  ]
+}
