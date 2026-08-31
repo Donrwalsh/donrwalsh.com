@@ -11,6 +11,7 @@
       name="description"
       content="Hi, I'm Don. Full-stack developer for about seven years. I also read a lot, dance, paint Warhammer 40k, chip away at Final Fantasy achievements, and have a dog."
     />
+    <link rel="icon" href="/favicon.ico" sizes="any" />
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link
@@ -98,7 +99,8 @@
         max-width: 30ch;
       }
       .spine nav {
-        margin-top: 34px;
+        margin-top: auto;
+        margin-bottom: 40px;
         display: flex;
         flex-direction: column;
         gap: 2px;
@@ -131,7 +133,7 @@
         color: #fff;
         text-decoration: underline;
       }
-      .spine .s-dog {
+      .spine .s-action {
         margin-top: 18px;
         padding-top: 16px;
         border-top: 1px solid rgba(255, 255, 255, 0.18);
@@ -184,6 +186,12 @@
         gap: 12px;
         margin-top: 26px;
         flex-wrap: wrap;
+      }
+      .hero-availability {
+        display: none;
+        margin-top: 18px;
+        font-size: 0.9rem;
+        color: var(--ink-soft);
       }
       .btn {
         font-family: "IBM Plex Mono", monospace;
@@ -257,9 +265,11 @@
       }
       .proj h3 a {
         text-decoration: none;
+        color: var(--navy);
+        border-bottom: 1.5px solid var(--navy);
       }
       .proj h3 a:hover {
-        color: var(--navy);
+        border-bottom-color: transparent;
       }
       .proj p {
         margin: 0 0 8px;
@@ -326,6 +336,7 @@
         display: grid;
         grid-template-columns: repeat(2, 1fr);
         gap: 24px;
+        margin-bottom: 24px;
       }
       .pcard {
         background: #fff;
@@ -576,7 +587,9 @@
 
       @media (max-width: 920px) {
         .spine {
-          position: static;
+          position: sticky;
+          top: 0;
+          z-index: 10;
           width: auto;
           height: auto;
           flex-direction: row;
@@ -586,14 +599,24 @@
           padding: 22px 24px;
         }
         .spine .s-line,
-        .spine nav,
-        .spine .s-dog {
+        .spine .s-action,
+        .spine .s-contact {
           display: none;
         }
-        .spine .s-contact {
-          margin: 0;
+        .spine nav {
+          display: flex;
           flex-direction: row;
-          padding: 0;
+          flex-basis: 100%;
+          flex-wrap: wrap;
+          gap: 0;
+          margin-top: 0;
+        }
+        .spine nav a {
+          border-bottom: none;
+          padding: 4px 18px 4px 0;
+        }
+        .hero-availability {
+          display: block;
         }
         .shell {
           margin-left: 0;
@@ -621,8 +644,8 @@
       <div class="s-name">Don R. Walsh</div>
       <div class="s-role">Full-stack developer</div>
       <p class="s-line">
-        Building software about seven years, mostly consulting. Now into agentic
-        AI tools.
+        Full-stack for seven years. Lately I'm pulling apart what agentic AI can
+        actually do.
       </p>
       <nav>
         <a href="#experience">Experience</a>
@@ -631,25 +654,27 @@
         <a href="#contact">Contact</a>
       </nav>
       <div class="s-contact">
-        <a href="mailto:donrwalsh@gmail.com">donrwalsh@gmail.com</a>
-        <a href="https://github.com/Donrwalsh">GitHub</a>
-        <a href="https://www.linkedin.com/in/don-walsh-71b93054/">LinkedIn</a>
+        <a href="https://github.com/Donrwalsh">See the code</a>
+        <a href="https://www.linkedin.com/in/don-walsh-71b93054/">Work history</a>
+        <a href="/resume.pdf">View résumé</a>
       </div>
-      <p class="s-dog">
-        I've also got a dog. They think the workday ends at 4 and won't hear
-        otherwise. Photos soon.
-      </p>
+      <!-- <p class="s-action">
+        I took some time off in 2025–2026 and I'm now ready for what's next. If
+        something here caught your eye, I'd love to hear from you.
+      </p> -->
     </aside>
 
     <div class="shell">
       <section class="hero col" style="border-bottom: none">
         <p class="eyebrow">Full-stack developer</p>
-        <h1>Hi, I'm Don. I've been building software for about seven years.</h1>
+        <h1>
+          Hi, I'm Don. Seven years of full-stack, a break, and now I'm deep in
+          what agentic AI can actually do.
+        </h1>
         <p class="lede">
-          Most of that was consulting work at Perficient and Creed Interactive,
+          Most of that was consulting work — Perficient, Creed Interactive —
           plus a stretch in-house at Cogency Global. I came up self-taught and I
-          still put time into the basics. These days I'm mostly playing with
-          agentic AI tools.
+          still put time into the basics. I'm ready for what's next.
         </p>
         <div class="hero-cta">
           <a class="btn btn-primary" href="mailto:donrwalsh@gmail.com"
@@ -658,6 +683,7 @@
           <a class="btn btn-ghost" href="/resume.pdf">My résumé</a>
           <a class="btn btn-ghost" href="#beyond">Jump to the personal bit</a>
         </div>
+        <p class="hero-availability">If something here caught your eye, I'd love to hear from you.</p>
       </section>
 
       <section id="experience" class="col">
@@ -670,10 +696,10 @@
           </div>
           <div class="role-sub">Application Developer</div>
           <p>
-            I joined as an Application Developer and ended up being the one who
-            talked through the technical side with stakeholders and made a call
-            when we needed one. I spent a lot of time in code review with
-            teammates too.
+            I joined as an Application Developer and shipped two products: a
+            Representation Contact Verification Tool and a Nonprofit Compliance
+            Management Tool. I ended up owning the technical conversations with
+            stakeholders and spent a lot of time in code review with teammates.
           </p>
         </div>
         <div class="role">
@@ -686,9 +712,10 @@
             Michigan)
           </div>
           <p>
-            I was senior dev on the ConvergeOne account and a developer on Delta
-            Dental of Michigan. I kept a custom React chat app healthy, and
-            helped get 2,600-plus QA tests done when the timeline got tight.
+            I picked up React on the job and became senior dev on the
+            ConvergeOne account, keeping a custom chat app running. Worked Delta
+            Dental of Michigan in parallel in a SAFe environment and helped push
+            through 2,600-plus QA tests under a tight deadline.
           </p>
         </div>
         <div class="role">
@@ -702,7 +729,8 @@
           <p>
             I worked with Poly, Mitsubishi UFJ Financial Group, and Adobe here.
             Mostly I kept a trust and custody portal running, front to back.
-            They gave me an innovation award in 2019.
+            About $2 billion in transactions moved through it each year. They
+            gave me an innovation award in 2019.
           </p>
         </div>
         <div class="role">
@@ -712,8 +740,8 @@
           </div>
           <div class="role-sub">Front End Developer</div>
           <p>
-            My first dev job. I moved an old AngularJS marketing site over to
-            Angular 4, quickly.
+            My first dev job. I learned the ropes and accomplished migrating an
+            old AngularJS marketing site over to Angular 4, quickly.
           </p>
         </div>
       </section>
@@ -740,35 +768,67 @@
         </div>
         <div class="proj">
           <div>
-            <h3>Rules Assistant</h3>
+            <h3>
+              <a href="https://github.com/Donrwalsh/mtg-rules"
+                >MTG Rules Assistant</a
+              >
+            </h3>
             <p>
-              I want a tool that answers questions about a big ruleset and shows
-              you where in the text it got the answer. Haven't started yet.
+              A tool that answers questions about the Magic: The Gathering
+              comprehensive rules and cites the exact passages it drew from.
             </p>
             <span class="tag">RAG</span><span class="tag">Retrieval</span>
           </div>
-          <span class="status-pill">Planned</span>
+          <span class="status-pill">In progress</span>
         </div>
       </section>
 
       <div class="transition">
-        <p class="small">Now the other stuff</p>
-        <h2>You're hiring a person, so here's the person.</h2>
+        <p class="small">The rest of it</p>
+        <h2>I think the personal stuff matters.<br />Here's mine.</h2>
       </div>
 
       <section id="beyond" class="personal">
         <div class="col">
           <p class="eyebrow">Off the clock</p>
           <p class="intro">
-            My job isn't the whole story, and I'd rather you know the rest of it
-            up front.
+            I like to be doing something. Here's what that looks like.
           </p>
+
+          <div class="photocard dancing">
+            <h3>🕺 Dancing</h3>
+            <p>
+              Dancing is how I stay active and social. I’m open to any style,
+              but rhythm dances have my heart.
+            </p>
+            <div class="shots">
+              <a class="shot lead" href="images/dancing-01.jpg"
+                ><img
+                  src="images/dancing-01.jpg"
+                  alt="Don and Ali dancing Samba at Mears Park"
+                  loading="lazy"
+              /></a>
+              <a class="shot" href="images/dancing-02.jpg"
+                ><img
+                  src="images/dancing-02.jpg"
+                  alt="Don and Miriam dancing Tango in the Studio"
+                  loading="lazy"
+              /></a>
+              <a class="shot" href="images/dancing-03.jpg"
+                ><img
+                  src="images/dancing-03.jpg"
+                  alt="Don and Valerie dancing Hustle at Nolan Mains Plaza"
+                  loading="lazy"
+              /></a>
+            </div>
+          </div>
+
           <div class="pgrid">
             <div class="pcard">
               <h3>📚 Reading</h3>
               <p>
                 I treat reading as both a way to broaden my mental models and a
-                favorite way to relax. You can see the full mix of what’s
+                favorite way to relax. You can see the full mix of what's
                 shaping and entertaining my mind on my bookshelf.
               </p>
               <a
@@ -797,48 +857,61 @@
             </div>
           </div>
 
-          <div class="photocard dancing">
-            <h3>🕺 Dancing</h3>
-            <p>
-              Dancing is how I stay active and social. I’m open to any style,
-              but rhythm dances have my heart.
-            </p>
-            <div class="shots">
-              <a class="shot lead" href="images/dancing-01.jpg"
-                ><img src="images/dancing-01.jpg" alt="…" loading="lazy"
-              /></a>
-              <a class="shot" href="images/dancing-02.jpg"
-                ><img src="images/dancing-02.jpg" alt="…" loading="lazy"
-              /></a>
-              <a class="shot" href="images/dancing-03.jpg"
-                ><img src="images/dancing-03.jpg" alt="…" loading="lazy"
-              /></a>
-            </div>
-          </div>
-
           <div class="photocard">
             <h3>⚔️ Warhammer 40k</h3>
             <p>
-              I paint a Warhammer 40k army. Most of it's assembled. Swap these
-              boxes for real photos whenever.
+              I love tactile, hands-on hobbies, and painting Warhammer 40k
+              miniatures is a favorite creative outlet of mine. Here’s a look at
+              some of the armies I’ve built and painted.
             </p>
             <div class="shots">
-              <div class="photoslot lead"><span>photo: army — lead</span></div>
-              <div class="photoslot"><span>photo: army</span></div>
-              <div class="photoslot"><span>photo: army</span></div>
+              <a class="shot lead" href="images/wh40k-01.jpg"
+                ><img
+                  src="images/wh40k-01.jpg"
+                  alt="Close-up of painted Warhammer 40k miniatures - Front line units of Hive Fleet Bigbrass"
+                  loading="lazy"
+              /></a>
+              <a class="shot" href="images/wh40k-02.jpg"
+                ><img
+                  src="images/wh40k-02.jpg"
+                  alt="Close-up of painted Warhammer 40k miniatures - Biomass ready for consumption by Hive Fleet Bigbrass"
+                  loading="lazy"
+              /></a>
+              <a class="shot" href="images/wh40k-03.jpg"
+                ><img
+                  src="images/wh40k-03.jpg"
+                  alt="Close-up of painted Warhammer 40k miniatures - Monstrosities of Hive Fleet Bigbrass"
+                  loading="lazy"
+              /></a>
             </div>
           </div>
 
           <div class="photocard">
-            <h3>🐕 The dog</h3>
+            <h3>🐕 Saxxon</h3>
             <p>
-              Oh, and I have a dog. They're convinced the workday ends at 4, and
-              they're usually right. Photos once I get them.
+              I share my space with Saxxon, my Sheltie and constant companion.
+              He has his reactive moments, but he’s my best buddy and keeps life
+              lively.
             </p>
             <div class="shots">
-              <div class="photoslot lead"><span>photo: dog — lead</span></div>
-              <div class="photoslot"><span>photo: dog</span></div>
-              <div class="photoslot"><span>photo: dog</span></div>
+              <a class="shot lead" href="images/saxxon-01.jpg"
+                ><img
+                  src="images/saxxon-01.jpg"
+                  alt="Saxxon, a Shetland Sheepdog, sitting indoors celebrating his 7th birthday."
+                  loading="lazy"
+              /></a>
+              <a class="shot" href="images/saxxon-02.jpg"
+                ><img
+                  src="images/saxxon-02.jpg"
+                  alt="Saxxon, a Shetland Sheepdog, sitting indoors excitedly waiting for the elevator."
+                  loading="lazy"
+              /></a>
+              <a class="shot" href="images/saxxon-03.jpg"
+                ><img
+                  src="images/saxxon-03.jpg"
+                  alt="Saxxon, a Shetland Sheepdog, sitting indoors lounging at his window station."
+                  loading="lazy"
+              /></a>
             </div>
           </div>
         </div>
@@ -848,19 +921,19 @@
         <div class="col">
           <h2>Come say hi.</h2>
           <p class="sub">
-            About the work, the side projects, a book rec, or how far you've
-            gotten in your own FF run. All good.
+            Let's talk. About the work, or about any of the rest of it.
           </p>
           <div class="contact-row">
-            <a href="mailto:donrwalsh@gmail.com">✉ donrwalsh@gmail.com</a>
-            <a href="https://github.com/Donrwalsh">GitHub</a>
+            <a href="mailto:donrwalsh@gmail.com">Send an email</a>
+            <a href="https://github.com/Donrwalsh">See the code</a>
             <a href="https://www.linkedin.com/in/don-walsh-71b93054/"
-              >LinkedIn</a
+              >Work history</a
             >
+            <div style="flex-basis:100%;height:0"></div>
             <a href="https://www.goodreads.com/user/show/124432031-don-walsh"
-              >Goodreads</a
+              >What I'm reading</a
             >
-            <a href="/resume.pdf">Résumé</a>
+            <a href="/resume.pdf">View résumé</a>
           </div>
           <p class="fine">Built by Don R. Walsh © 2019–2026 · donrwalsh.com</p>
         </div>
