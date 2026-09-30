@@ -1,7 +1,7 @@
 export const pdfRenderOptions = {
   format: "Letter",
   printBackground: true,
-  margin: { top: "0.45in", right: "0.65in", bottom: "0.45in", left: "0.65in" },
+  margin: { top: "0.4in", right: "0.55in", bottom: "0.4in", left: "0.55in" },
 };
 
 export const pdfViewport = { width: 900, height: 1165, deviceScaleFactor: 2 };
@@ -23,11 +23,36 @@ function fmtDate(str) {
 }
 
 function dateRange(start, end) {
-  return `${fmtDate(start)}&nbsp;–&nbsp;${fmtDate(end || null)}`;
+  // Plain spaces (not &nbsp;) so extracted text reads "Jan 2024 – Jun 2025".
+  return `${fmtDate(start)} – ${fmtDate(end || null)}`;
 }
 
-function tags(keywords = []) {
-  return keywords.map((k) => `<span class="tag">${esc(k)}</span>`).join("");
+function bareUrl(u) {
+  return String(u ?? "")
+    .replace(/^https?:\/\//, "")
+    .replace(/^www\./, "")
+    .replace(/\/$/, "");
+}
+
+// Visible text separator so parsers see real delimiters between items.
+const SEP = `<span class="sep" aria-hidden="true"> | </span>`;
+
+function section(title, body) {
+  if (!body) return "";
+  return `
+  <section class="section">
+    <h2 class="section-title">${esc(title)}</h2>
+    ${body}
+  </section>`;
+}
+
+// One-line entry: bold title, optional detail, right-aligned date.
+function lineEntry(title, detail, date) {
+  return `
+    <div class="line-entry">
+      <span class="line-main"><strong>${esc(title)}</strong>${detail ? `, ${esc(detail)}` : ""}</span>
+      ${date ? `<span class="date">${esc(date)}</span>` : ""}
+    </div>`;
 }
 
 export function render(resume) {
@@ -35,6 +60,7 @@ export function render(resume) {
     basics = {},
     work = [],
     skills = [],
+    projects = [],
     education = [],
     awards = [],
     volunteer = [],
@@ -45,95 +71,111 @@ export function render(resume) {
     name,
     label,
     email,
+    phone,
     url,
     summary,
     location = {},
     profiles = [],
   } = basics;
 
-  /* ---- Sidebar ---- */
+  /* ---- Header contact line ---- */
   const contactHtml = [
     email ? `<a href="mailto:${esc(email)}">${esc(email)}</a>` : "",
     location.city
       ? `<span>${esc(location.city)}, ${esc(location.region)}</span>`
       : "",
-    `<span class="remote-badge">Open to Remote</span>`,
-    url
-      ? `<a href="${esc(url)}">${esc(url.replace(/^https?:\/\//, ""))}</a>`
+    phone
+      ? `<a href="tel:${esc(phone.replace(/[^\d+]/g, ""))}">${esc(phone)}</a>`
       : "",
-    ...profiles.map(
-      (p) =>
-        `<a href="${esc(p.url)}">${esc(p.network)}${p.username ? " / " + esc(p.username) : ""}</a>`,
+    url ? `<a href="${esc(url)}">${esc(bareUrl(url))}</a>` : "",
+    // Show the actual URL as text: link targets are lost in text extraction.
+    ...profiles.map((p) =>
+      p.url ? `<a href="${esc(p.url)}">${esc(bareUrl(p.url))}</a>` : "",
     ),
   ]
     .filter(Boolean)
-    .map((s) => `<div class="contact-item">${s}</div>`)
-    .join("");
+    .map((s) => `<span class="contact-item">${s}</span>`)
+    .join(SEP);
 
-  const skillsHtml = skills
-    .map(
-      (s) => `
-    <div class="skill-cat">
-      <div class="skill-cat-label">${esc(s.name)}</div>
-      <div class="tag-row">${tags(s.keywords)}</div>
-    </div>`,
-    )
-    .join("");
+  /* ---- Skills: "Label: a, b, c" rows ---- */
+  const skillsHtml = skills.length
+    ? `<div class="skills">${skills
+        .map(
+          (s) => `
+      <div class="skill-row">
+        <span class="skill-label">${esc(s.name)}:</span>
+        <span class="skill-list">${(s.keywords || []).map(esc).join(", ")}</span>
+      </div>`,
+        )
+        .join("")}</div>`
+    : "";
 
-  const educationHtml = education
-    .map(
-      (e) => `
-    <div class="edu-entry">
-      <div class="edu-inst">${esc(e.institution)}</div>
-      <div class="edu-degree">${esc(e.studyType)}${e.area ? ", " + esc(e.area) : ""}</div>
-      ${e.courses && e.courses.length ? `<div class="edu-courses">${e.courses.map(esc).join(" · ")}</div>` : ""}
-    </div>`,
-    )
-    .join("");
-
-  const awardsHtml = awards
-    .map(
-      (a) => `
-    <div class="aside-entry">
-      <div class="aside-title">${esc(a.title)}</div>
-      <div class="aside-meta">${esc(a.awarder)}${a.date ? " · " + fmtDate(a.date) : ""}</div>
-    </div>`,
-    )
-    .join("");
-
-  const speakingHtml = publications
-    .map(
-      (p) => `
-    <div class="aside-entry">
-      <div class="aside-title">${esc(p.name)}</div>
-      <div class="aside-meta">${esc(p.publisher)}${p.releaseDate ? " · " + fmtDate(p.releaseDate) : ""}</div>
-    </div>`,
-    )
-    .join("");
-
-  const volunteerHtml = volunteer
-    .map(
-      (v) => `
-    <div class="aside-entry">
-      <div class="aside-title">${esc(v.organization)}</div>
-      <div class="aside-meta">${esc(v.position)}${v.startDate ? " · " + fmtDate(v.startDate) : ""}</div>
-    </div>`,
-    )
-    .join("");
-
-  /* ---- Main ---- */
+  /* ---- Experience ---- */
   const workHtml = work
     .map(
       (w) => `
     <div class="work-entry">
-      <div class="work-top">
+      <div class="entry-head">
         <span class="work-org">${esc(w.name)}</span>
-        <span class="work-dates">${dateRange(w.startDate, w.endDate)}</span>
+        <span class="date">${dateRange(w.startDate, w.endDate)}</span>
       </div>
       <div class="work-pos">${esc(w.position)}</div>
-      ${w.highlights && w.highlights.length ? `<ul class="work-bullets">${w.highlights.map((h) => `<li>${esc(h)}</li>`).join("")}</ul>` : ""}
+      ${
+        w.highlights && w.highlights.length
+          ? `<ul class="bullets">${w.highlights.map((h) => `<li>${esc(h)}</li>`).join("")}</ul>`
+          : ""
+      }
     </div>`,
     )
+    .join("");
+
+  /* ---- Projects: name + URL, keywords right; description below ---- */
+  const projectsHtml = projects
+    .map(
+      (p) => `
+    <div class="work-entry">
+      <div class="entry-head">
+        <span><span class="work-org">${esc(p.name)}</span>${
+          p.url ? `${SEP}<a href="${esc(p.url)}">${esc(bareUrl(p.url))}</a>` : ""
+        }</span>
+        ${p.keywords && p.keywords.length ? `<span class="date">${p.keywords.map(esc).join(", ")}</span>` : ""}
+      </div>
+      ${p.description ? `<div class="project-desc">${esc(p.description)}</div>` : ""}
+    </div>`,
+    )
+    .join("");
+
+  /* ---- Education ---- */
+  const educationHtml = education
+    .map((e) => {
+      const degree = `${e.studyType || ""}${e.area ? ", " + e.area : ""}`;
+      const extras =
+        e.courses && e.courses.length ? "; " + e.courses.join(", ") : "";
+      // Graduation year only, right-aligned like the other dates.
+      const year = e.endDate ? String(e.endDate).slice(0, 4) : "";
+      return lineEntry(e.institution, degree + extras, year);
+    })
+    .join("");
+
+  /* ---- Recognition & Community ---- */
+  // Awards, talks, and volunteering merged into one list, newest first.
+  // Year-only dates (e.g. "2022") render as just the year.
+  const shortDate = (d) => (/^\d{4}$/.test(String(d)) ? String(d) : fmtDate(d));
+  const recognitionHtml = [
+    ...awards.map((a) => ({ title: a.title, detail: a.awarder, date: a.date })),
+    ...publications.map((p) => ({
+      title: p.name,
+      detail: `Speaker, ${p.publisher}`,
+      date: p.releaseDate,
+    })),
+    ...volunteer.map((v) => ({
+      title: v.organization,
+      detail: `Volunteer ${v.position}`,
+      date: v.startDate,
+    })),
+  ]
+    .sort((a, b) => String(b.date ?? "").localeCompare(String(a.date ?? "")))
+    .map((r) => lineEntry(r.title, r.detail, r.date ? shortDate(r.date) : ""))
     .join("");
 
   /* ---- Document ---- */
@@ -141,6 +183,7 @@ export function render(resume) {
 <html lang="en">
 <head>
 <meta charset="UTF-8"/>
+<title>${esc(name)} – Resume</title>
 <link rel="preconnect" href="https://fonts.googleapis.com"/>
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
 <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@500;600;700&family=Inter:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet"/>
@@ -151,11 +194,8 @@ export function render(resume) {
     --navy:      #26344a;
     --clay:      #b0512f;
     --ink:       #171b20;
-    --ink-soft:  #5a6169;
-    --line:      #e6e6e2;
-    --navy-soft: #eef1f5;
-    --sidebar-w: 190px;
-    --gap:       32px;
+    --ink-soft:  #4d545c;
+    --line:      #e1e1dc;
     --body-size: 8.5pt;
   }
 
@@ -163,268 +203,135 @@ export function render(resume) {
     font-family: 'Inter', system-ui, sans-serif;
     font-size: var(--body-size);
     color: var(--ink);
-    line-height: 1.5;
+    line-height: 1.36;
     background: #fff;
   }
 
   a { color: var(--clay); text-decoration: none; }
+  strong { font-weight: 600; }
 
-  /* ---- Header ---- */
+  /* ---- Header: name, title and contact each on their own line ---- */
   .resume-header {
+    padding-bottom: 8px;
+    margin-bottom: 9px;
     border-bottom: 2px solid var(--navy);
-    padding-bottom: 10px;
-    margin-bottom: 18px;
-    display: flex;
-    align-items: baseline;
-    gap: 14px;
   }
   .resume-name {
     font-family: 'Outfit', sans-serif;
     font-weight: 700;
     font-size: 22pt;
     color: var(--navy);
-    letter-spacing: -0.02em;
-    line-height: 1;
+    /* Normal tracking keeps word spaces intact in PDF text extraction. */
+    letter-spacing: normal;
+    word-spacing: 0.08em;
+    line-height: 1.1;
   }
   .resume-label {
     font-family: 'IBM Plex Mono', monospace;
-    font-size: 8pt;
+    font-size: 9pt;
     color: var(--ink-soft);
+    margin-top: 3px;
   }
-
-  /* ---- Two-column layout ---- */
-  .layout {
-    display: grid;
-    grid-template-columns: var(--sidebar-w) 1fr;
-    gap: 0 var(--gap);
-    align-items: start;
-  }
-
-  /* ---- Sidebar ---- */
-  .sidebar {}
-
-  .sidebar-section {
-    margin-bottom: 11px;
-    padding-bottom: 11px;
-    border-bottom: 1px solid var(--line);
-  }
-  .sidebar-section:last-child {
-    border-bottom: none;
-    margin-bottom: 0;
-  }
-
-  .section-label {
-    font-family: 'IBM Plex Mono', monospace;
-    font-size: 6.5pt;
-    letter-spacing: 0.1em;
-    text-transform: uppercase;
-    color: var(--navy);
-    margin-bottom: 7px;
-  }
-
-  .contact-item {
+  .contact {
+    margin-top: 6px;
     font-size: 7.5pt;
     color: var(--ink-soft);
-    margin-bottom: 3px;
-    word-break: break-all;
   }
-  .contact-item a { color: var(--clay); }
-  .remote-badge {
-    font-size: 7.5pt;
-    color: var(--ink-soft);
-    font-style: italic;
-  }
+  .contact-item { white-space: nowrap; }
+  .sep { color: #b5b8bc; }
 
-  .skills-grid {
-    display: grid;
-    grid-template-columns: repeat(3, 1fr);
-    gap: 6px 14px;
-  }
-  .skill-cat { }
-  .skill-cat-label {
-    font-size: 6.5pt;
+  /* ---- Sections ---- */
+  .section { margin-bottom: 9px; }
+  .section:last-child { margin-bottom: 0; }
+
+  .section-title {
+    font-family: 'Outfit', sans-serif;
     font-weight: 600;
-    color: var(--ink-soft);
-    text-transform: uppercase;
-    letter-spacing: 0.06em;
-    margin-bottom: 4px;
-  }
-  .tag-row { display: flex; flex-wrap: wrap; gap: 3px; }
-  .tag {
-    font-family: 'IBM Plex Mono', monospace;
-    font-size: 6pt;
+    font-size: 10pt;
     color: var(--navy);
-    background: var(--navy-soft);
-    padding: 1px 5px;
-    border-radius: 2px;
-  }
-
-  .edu-entry { margin-bottom: 6px; }
-  .edu-entry:last-child { margin-bottom: 0; }
-  .edu-inst { font-size: 7.5pt; font-weight: 600; }
-  .edu-degree { font-size: 7.5pt; color: var(--ink-soft); }
-  .edu-courses { font-size: 7pt; color: var(--ink-soft); margin-top: 2px; }
-
-  .aside-entry { margin-bottom: 6px; }
-  .aside-entry:last-child { margin-bottom: 0; }
-  .aside-title { font-size: 7.5pt; font-weight: 600; }
-  .aside-meta {
-    font-family: 'IBM Plex Mono', monospace;
-    font-size: 6.5pt;
-    color: var(--ink-soft);
-    margin-top: 1px;
-  }
-
-  /* ---- Main ---- */
-  .main {}
-
-  .summary {
-    font-size: 8.5pt;
-    color: var(--ink-soft);
-    line-height: 1.5;
-    margin-bottom: 12px;
-    padding-bottom: 10px;
+    padding-bottom: 2px;
+    margin-bottom: 5px;
     border-bottom: 1px solid var(--line);
   }
 
-  .main-section { margin-bottom: 11px; }
-  .main-section:last-child { margin-bottom: 0; }
+  .summary { color: var(--ink-soft); }
 
-  .main-section-label {
-    font-family: 'IBM Plex Mono', monospace;
-    font-size: 6.5pt;
-    letter-spacing: 0.1em;
-    text-transform: uppercase;
-    color: var(--navy);
-    margin-bottom: 8px;
-    padding-bottom: 5px;
-    border-bottom: 1px solid var(--line);
-  }
-
-  .work-entry {
-    padding: 6px 0;
-    border-top: 1px solid var(--line);
-  }
-  .work-entry:first-of-type { border-top: none; padding-top: 0; }
-
-  .work-top {
+  /* ---- Shared row: text left, date right, same baseline ---- */
+  .entry-head,
+  .line-entry {
     display: flex;
     justify-content: space-between;
     align-items: baseline;
-    gap: 8px;
+    gap: 12px;
   }
-  .work-org {
-    font-weight: 600;
-    font-size: 9pt;
-    color: var(--navy);
-  }
-  .work-dates {
+  .line-entry + .line-entry { margin-top: 2px; }
+  .date {
     font-family: 'IBM Plex Mono', monospace;
-    font-size: 6.5pt;
+    font-size: 7.5pt;
     color: var(--ink-soft);
     white-space: nowrap;
     flex-shrink: 0;
   }
+
+  /* ---- Skills ---- */
+  .skill-row {
+    display: flex;
+    gap: 8px;
+    margin-bottom: 1px;
+  }
+  .skill-row:last-child { margin-bottom: 0; }
+  .skill-label {
+    flex: 0 0 165px;
+    font-weight: 600;
+    color: var(--navy);
+  }
+  .skill-list { color: var(--ink); }
+
+  /* ---- Experience ---- */
+  .work-entry + .work-entry { margin-top: 6px; }
+  .work-org {
+    font-weight: 600;
+    font-size: 9.5pt;
+    color: var(--navy);
+  }
   .work-pos {
-    font-size: 7.5pt;
-    color: var(--ink-soft);
-    margin: 2px 0 5px;
+    font-weight: 500;
+    color: var(--ink);
+    margin: 0 0 2px;
   }
-  .work-bullets {
-    margin: 0;
-    padding-left: 14px;
+  .bullets { padding-left: 15px; }
+  .bullets li {
+    color: var(--ink);
+    margin-bottom: 1px;
+    line-height: 1.36;
   }
-  .work-bullets li {
-    font-size: 8pt;
-    color: var(--ink-soft);
-    margin-bottom: 2px;
-    line-height: 1.45;
+  .bullets li:last-child { margin-bottom: 0; }
+
+  .project-desc { color: var(--ink); }
+
+  /* ---- Education ---- */
+
+  @media print {
+    .work-entry, .line-entry { break-inside: avoid; }
   }
-  .work-bullets li:last-child { margin-bottom: 0; }
 </style>
 </head>
 <body>
 
-<div class="resume-header">
-  <div class="resume-name">${esc(name)}</div>
-  <div class="resume-label">${esc(label)}</div>
-</div>
+<header class="resume-header">
+  <h1 class="resume-name">${esc(name)}</h1>
+  ${label ? `<div class="resume-label">${esc(label)}</div>` : ""}
+  ${contactHtml ? `<div class="contact">${contactHtml}</div>` : ""}
+</header>
 
-<div class="layout">
-  <aside class="sidebar">
-
-    ${
-      contactHtml
-        ? `<div class="sidebar-section">
-      <div class="section-label">Contact</div>
-      ${contactHtml}
-    </div>`
-        : ""
-    }
-
-
-    ${
-      educationHtml
-        ? `<div class="sidebar-section">
-      <div class="section-label">Education</div>
-      ${educationHtml}
-    </div>`
-        : ""
-    }
-
-    ${
-      awardsHtml
-        ? `<div class="sidebar-section">
-      <div class="section-label">Awards & Achievements</div>
-      ${awardsHtml}
-    </div>`
-        : ""
-    }
-
-    ${
-      speakingHtml
-        ? `<div class="sidebar-section">
-      <div class="section-label">Speaking</div>
-      ${speakingHtml}
-    </div>`
-        : ""
-    }
-
-    ${
-      volunteerHtml
-        ? `<div class="sidebar-section">
-      <div class="section-label">Volunteer</div>
-      ${volunteerHtml}
-    </div>`
-        : ""
-    }
-
-  </aside>
-
-  <main class="main">
-
-    ${summary ? `<p class="summary">${esc(summary)}</p>` : ""}
-
-    ${
-      skillsHtml
-        ? `<div class="main-section">
-      <div class="main-section-label">Skills</div>
-      <div class="skills-grid">${skillsHtml}</div>
-    </div>`
-        : ""
-    }
-
-    ${
-      workHtml
-        ? `<div class="main-section">
-      <div class="main-section-label">Experience</div>
-      ${workHtml}
-    </div>`
-        : ""
-    }
-
-  </main>
-</div>
+<main>
+  ${summary ? section("Summary", `<p class="summary">${esc(summary)}</p>`) : ""}
+  ${section("Skills", skillsHtml)}
+  ${section("Projects", projectsHtml)}
+  ${section("Experience", workHtml)}
+  ${section("Education", educationHtml)}
+  ${section("Recognition & Community", recognitionHtml)}
+</main>
 
 </body>
 </html>`;

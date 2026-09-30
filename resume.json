@@ -4,8 +4,9 @@
     "name": "Don R. Walsh",
     "label": "Full Stack Developer",
     "email": "donrwalsh@gmail.com",
+    "phone": "+1 (612) 310-0427",
     "url": "https://donrwalsh.com",
-    "summary": "Full-stack developer with seven years across fintech, compliance, and consumer platforms, strongest in TypeScript/React and Node/.NET. Currently building hands-on agentic AI experience after a career break, and am now seeking a full-time or contract full-stack role.",
+    "summary": "Full-stack developer with seven years across fintech, compliance, and consumer platforms, strongest in TypeScript (React, Angular) and Node/.NET. Former development team lead who mentored engineers and coordinated multi-team rollouts. Recently shipped two LLM apps: a RAG rules assistant and a multi-model puzzle benchmark. Seeking a full-time or contract role.",
     "location": {
       "city": "Brooklyn Center",
       "region": "MN",
@@ -30,9 +31,8 @@
       "startDate": "2024-01-01",
       "endDate": "2025-06-01",
       "highlights": [
-        "Led development of two internal tools (Representation Contact Verification Tool, Nonprofit Compliance Management Tool) through to completion",
-        "Led technical discussions and stakeholder conversations, mentoring teammates through code reviews and coaching",
-        "Coordinated across 5 operations teams to navigate a complex rollout process while maintaining consistent delivery output"
+        "Led a 4-person team building two internal .NET/Angular compliance tools for operations teams: a contact-verification tool and a nonprofit compliance tracker, replacing manual processes",
+        "Turned operations requirements into technical designs; raised team code quality through code reviews and 1:1 coaching"
       ]
     },
     {
@@ -41,8 +41,8 @@
       "startDate": "2021-02-01",
       "endDate": "2023-09-01",
       "highlights": [
-        "Client ConvergeOne: Maintained and enhanced a custom React chat application; led code reviews and mentored client team",
-        "Client Delta Dental of Michigan: Introduced code quality and testing standards within a SAFe environment for an unfamiliar client stack; directed delivery of 2,600+ QA tests under a tight deadline"
+        "Client ConvergeOne: Extended a custom containerized React/TypeScript chat application, re-architecting it into microfrontends so features could deploy separately; led code reviews for the client's in-house team",
+        "Client Delta Dental of Michigan: Rapidly onboarded to an Angular/TypeScript codebase and established code-quality and testing standards in a SAFe environment; directed delivery of 2,600+ QA tests under a tight deadline"
       ]
     },
     {
@@ -51,9 +51,9 @@
       "startDate": "2018-03-01",
       "endDate": "2021-02-01",
       "highlights": [
-        "Client Mitsubishi UFJ Financial Group: Maintained a trust and custody portal handling ~$2B in transactions annually; received Perficient Innovation Award (2019) for tenacious problem solving",
-        "Client Adobe: Assisted 50+ client teams in transitioning to named user licensing; built a simulated roster REST API and custom BI reporting",
-        "Client Poly: Built navigation-upgrade prototypes that laid the groundwork for a shipped redesign, and implemented frontend updates supporting a company rebrand"
+        "Client Mitsubishi UFJ Financial Group: Developed and supported a Java/Spring trust and custody portal handling ~$2B in transactions annually; helped migrate ACH bulk processing off legacy systems, earning a Perficient Innovation Award",
+        "Client Adobe: Guided 50+ enterprise customer teams through migration to named-user licensing; built a mock roster REST API for integration testing and custom BI reports that tracked migration progress",
+        "Client Poly: Built navigation prototypes that shaped a shipped redesign; implemented frontend updates for a company rebrand"
       ]
     },
     {
@@ -62,10 +62,24 @@
       "startDate": "2017-08-01",
       "endDate": "2018-02-01",
       "highlights": [
-        "Independently migrated a brochureware site from AngularJS to Angular 4 under a strict deadline",
-        "Built frontend features for a coupon redemption application, with additional contributions across the broader site",
-        "Designed and implemented a dynamic-forms system enabling non-technical users to submit and manage site content"
+        "Independently migrated a marketing site from AngularJS to Angular 4 under a strict deadline",
+        "Built frontend features for a coupon redemption application, with additional contributions across the broader application",
+        "Designed and implemented a dynamic-forms system letting non-technical staff publish content without developer involvement"
       ]
+    }
+  ],
+  "projects": [
+    {
+      "name": "NYT Connections Solver",
+      "url": "https://connections.donrwalsh.com",
+      "description": "Benchmarks LLMs from multiple providers (OpenAI, Gemini, Ollama and others) against brute-force solving strategies on every NYT Connections puzzle, using queued background jobs and a public leaderboard",
+      "keywords": ["TypeScript", "NestJS", "React", "BullMQ", "Vercel AI SDK"]
+    },
+    {
+      "name": "MTG Rules Assistant",
+      "url": "https://mtg-rules.donrwalsh.com",
+      "description": "Answers MTG rules questions via hybrid dense + BM25 retrieval, citing the exact rules and rulings; scored on a 50-case eval set",
+      "keywords": ["Python", "FastAPI", "RAG", "Qdrant", "Gemini"]
     }
   ],
   "education": [
@@ -73,7 +87,7 @@
       "institution": "University of Minnesota",
       "area": "Economics",
       "studyType": "BS",
-      "endDate": "2014-05-01",
+      "endDate": "2012",
       "courses": ["Mathematics minor", "Statistics minor"]
     }
   ],
@@ -102,47 +116,39 @@
     {
       "name": "Conversational Quantum Computing",
       "publisher": "Minnesota Developers Conference",
-      "releaseDate": "2022"
+      "releaseDate": "2022-06-01"
     },
     {
       "name": "Automate the Boring Stuff: CI/CD",
       "publisher": "Spring Meetup",
-      "releaseDate": "2018"
+      "releaseDate": "2018-07-01"
     }
   ],
   "skills": [
     {
-      "name": "Languages",
-      "keywords": ["TypeScript", "JavaScript", "Python", "C#", "Java", "PHP"]
-    },
-    {
-      "name": "Frontend",
-      "keywords": ["React", "Redux", "Angular 4-20", "HTML", "CSS"]
-    },
-    {
-      "name": "Backend & APIs",
-      "keywords": ["Node.js", "NestJS", ".NET", "Spring", "Spring Boot"]
-    },
-    {
-      "name": "Cloud & DevOps",
-      "keywords": ["AWS", "GCP", "Docker", "Jenkins", "Ansible"]
-    },
-    {
-      "name": "Databases & Search",
-      "keywords": ["SQL Server", "PostgreSQL", "MongoDB", "Elasticsearch"]
-    },
-    {
-      "name": "Other Tools",
+      "name": "Languages & Frameworks",
       "keywords": [
-        "Git",
-        "LaTeX",
-        "SVN",
-        "Vagrant",
-        "WordPress",
-        "Adobe Experience Manager",
-        "Groovy",
-        "Kotlin"
+        "TypeScript",
+        "JavaScript",
+        "Python",
+        "C#",
+        "Java",
+        "React",
+        "Redux",
+        "Angular",
+        "Node.js",
+        "NestJS",
+        ".NET",
+        "Spring Boot"
       ]
+    },
+    {
+      "name": "Cloud, DevOps & Data",
+      "keywords": ["AWS", "GCP", "Docker", "Jenkins", "Ansible", "Git", "PostgreSQL", "SQL Server", "MongoDB", "Elasticsearch"]
+    },
+    {
+      "name": "AI / LLM",
+      "keywords": ["RAG", "Hybrid Search", "Qdrant", "Vercel AI SDK", "OpenAI", "Gemini", "Ollama", "LLM Evals"]
     }
   ]
 }
