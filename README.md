@@ -12,14 +12,7 @@ npx serve -p 4200 .
 
 ## Resume
 
-`resume.json` is the source of truth. Edit it, regenerate the PDF, then commit both.
-
-```bash
-npm install        # first time only
-npm run export-resume
-```
-
-The PDF is committed to the repo and served at `/resume.pdf`. The theme lives in `theme/index.js` — edit it to change the PDF layout or styles.
+`resume.pdf` is committed to the repo and served at `/resume.pdf`. It's generated elsewhere — replace the file to update it.
 
 ## Deployment
 
