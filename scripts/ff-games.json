@@ -182,5 +182,11 @@
     "app_id": 1358700,
     "release_date": "2022-03-18",
     "name": "Stranger of Paradise: Final Fantasy Origin"
+  },
+  {
+    "key": "ff-resonance",
+    "app_id": 3259780,
+    "release_date": "2026-10-22",
+    "name": "Final Fantasy: Resonance"
   }
 ]
